@@ -1,0 +1,9 @@
+{
+	"documentId": "3c9bcb798eb55dc89c3300c0",
+	"outputFormat": "urdf",
+	"assemblyName": "simulation_robot",
+	"mergeSTLs": "visual",
+	"packageName": "little_red_rover/description/rover",
+	"addDummyBaseLink" : true,
+	"robotName" : "little red rover",
+}

@@ -1,0 +1,15 @@
+services:
+    workspace:
+        image: ros2_workspace
+        build:
+            context: ..
+            dockerfile: docker/ros2_workspace.Dockerfile
+        tty: true # Prevent immediate exit when running with dev containers
+        volumes:
+            - ../src:/little_red_rover_ws/src
+            - ../tools:/tools
+        ports:
+            - "9002:9002" # gzweb
+            - "9090:9090" # rosbridge
+            - "8001:8001/udp" # agent -> rover
+            - "8765:8765" # foxglove bridge
