@@ -10,7 +10,7 @@ from geometry_msgs.msg import TwistWithCovarianceStamped
 # Outputs integrated odometry as Odometry message on /odom
 # https://control.ros.org/master/doc/ros2_controllers/doc/mobile_robot_kinematics.html#differential-drive-robot
 
-wheel_track = 0.11439
+wheel_track = 0.145
 wheel_diameter = 0.060960
 
 

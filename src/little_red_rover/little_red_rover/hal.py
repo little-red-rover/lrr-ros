@@ -66,7 +66,9 @@ class HAL(Node):
     def handle_joint_states(self, packet: messages.JointStates):
         msg = JointState()
         msg.header.frame_id = "robot_body"
-        msg.header.stamp = self.get_clock().now().to_msg()
+        # msg.header.stamp = self.get_clock().now().to_msg()
+        msg.header.stamp.sec = packet.time.sec
+        msg.header.stamp.nanosec = packet.time.nanosec
         msg.name = packet.name
         msg.effort = packet.effort
         msg.position = packet.position
@@ -91,7 +93,9 @@ class HAL(Node):
                 self.laser_msg.ranges = [0.0] * 720
                 self.laser_msg.intensities = [0.0] * 720
 
-                self.laser_msg.header.stamp = self.get_clock().now().to_msg()
+                self.laser_msg.header.stamp.sec = packet.time.sec
+                self.laser_msg.header.stamp.nanosec = packet.time.nanosec
+                # self.laser_msg.header.stamp = self.get_clock().now().to_msg()
 
             self.laser_msg.ranges[index] = packet.ranges[i]
             self.laser_msg.intensities[index] = packet.intensities[i]
