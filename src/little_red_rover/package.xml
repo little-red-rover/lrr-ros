@@ -1,18 +1,20 @@
 <?xml version="1.0"?>
-<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
-<package format="3">
-	<name>little_red_rover</name>
-	<version>0.0.0</version>
-	<description>Base package for Little Red Rover (LLR)</description>
-	<maintainer email="michael@michael-crum.com">Michael Crum</maintainer>
-	<license>MIT</license>
+<package format="2">
+    <name>little_red_rover</name>
+    <version>0.0.0</version>
+    <description>The little_red_rover package</description>
 
-	<test_depend>ament_copyright</test_depend>
-	<test_depend>ament_flake8</test_depend>
-	<test_depend>ament_pep257</test_depend>
-	<test_depend>python3-pytest</test_depend>
-	<exec_depend>ros2launch</exec_depend>
+    <maintainer email="michael@michael-crum.com">Michael Crum</maintainer>
+    <url type="website">https://little-red-rover.com</url>
+    <author email="michael@michael-crum.com">Michael Crum</author>
 
+    <license>LGPLv2.1</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+    <build_depend>rospy</build_depend>
+    <build_export_depend>rospy</build_export_depend>
+
+    <exec_depend>rospy</exec_depend>
 	<exec_depend>rclpy</exec_depend>
 	<exec_depend>sensor_msgs</exec_depend>
 	<exec_depend>nav_msgs</exec_depend>
@@ -26,12 +28,9 @@
 	<exec_depend>teleop_twist_joy</exec_depend>
 	<exec_depend>slam_toolbox</exec_depend>
 	<exec_depend>navigation2</exec_depend>
-	<exec_depend>nav2_bringup</exec_depend>
     <exec_depend>robot_localization</exec_depend>
 	<exec_depend>foxglove_bridge</exec_depend>
-    <exec_depend>rmw_cyclonedds_cpp</exec_depend>
 
-	<export>
-		<build_type>ament_python</build_type>
-	</export>
+    <export>
+    </export>
 </package>

@@ -1,9 +1,9 @@
 services:
     workspace:
-        image: ros2_workspace
+        image: ros_workspace
         build:
             context: ..
-            dockerfile: docker/ros2_workspace.Dockerfile
+            dockerfile: docker/ros_workspace.Dockerfile
         tty: true # Prevent immediate exit when running with dev containers
         volumes:
             - ../src:/little_red_rover_ws/src
