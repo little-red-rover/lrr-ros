@@ -1,0 +1,8 @@
+<launch>
+    <param name="lrr_robot_description" command="$(find xacro)/xacro $(find little_red_rover)/description/lrr.urdf.xacro"/>
+    <node name="lrr_state_pub" pkg="robot_state_publisher" type="robot_state_publisher">
+        <remap from="robot_description" to="lrr_robot_description" />
+    </node>
+    <node name="foxglove_bridge" pkg="foxglove_bridge" type="foxglove_bridge" />
+    <node name="hal" pkg="little_red_rover" type="hal.py" output="screen"/>
+</launch>

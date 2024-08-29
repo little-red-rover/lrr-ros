@@ -41,7 +41,7 @@ RUN PROTOC_ZIP=protoc-27.3-linux-x86_64.zip && \
     rm -f $PROTOC_ZIP
 
 RUN source /ros_setup.bash && catkin_make
-RUN echo "source /little_red_rover_ws/devel/local_setup.bash" >> /ros_setup.bash
+RUN echo "source /little_red_rover_ws/devel/setup.bash" >> /ros_setup.bash
 
 RUN echo "alias lrr_install='(cd /little_red_rover_ws && apt update && rosdep update && rosdep install --from-paths src --ignore-src -y)'" >> /root/.bashrc
 RUN echo "alias lrr_build='(cd /little_red_rover_ws && catkin_make)'" >> /root/.bashrc
