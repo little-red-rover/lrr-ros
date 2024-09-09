@@ -1,6 +1,4 @@
 from setuptools import find_packages, setup
-import os
-from glob import glob
 
 package_name = "little_red_rover"
 

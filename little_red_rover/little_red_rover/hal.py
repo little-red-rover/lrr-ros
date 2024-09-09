@@ -108,7 +108,7 @@ class HAL:
 
 def main(args=None):
     rospy.init_node("hal", anonymous=True)
-    hal_node = HAL()
+    _ = HAL()
 
     rospy.spin()
 
