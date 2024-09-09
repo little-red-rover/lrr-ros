@@ -20,14 +20,17 @@ RUN pip3 install protobuf cryptography pathlib
 RUN echo "export LIBGL_ALWAYS_SOFTWARE=true" >> /ros_setup.bash
 
 ### Setup ROS workspace
-RUN mkdir -p /little_red_rover_ws/src
-COPY ../src /little_red_rover_ws/src
+RUN mkdir -p /little_red_rover_ws/src/little_red_rover
+COPY ./little_red_rover /little_red_rover_ws/src/little_red_rover
 
 WORKDIR /little_red_rover_ws
 
 RUN apt-get update && \
     rosdep update && \ 
     rosdep install --from-paths src --ignore-src -y 
+
+RUN source /ros_setup.bash && catkin_make
+RUN echo "source /little_red_rover_ws/devel/setup.bash" >> /ros_setup.bash
 
 ### Dev env setup
 RUN apt-get update && \
@@ -40,8 +43,6 @@ RUN PROTOC_ZIP=protoc-27.3-linux-x86_64.zip && \
     unzip -o $PROTOC_ZIP -d /usr/local 'include/*' && \
     rm -f $PROTOC_ZIP
 
-RUN source /ros_setup.bash && catkin_make
-RUN echo "source /little_red_rover_ws/devel/setup.bash" >> /ros_setup.bash
 
 RUN echo "alias lrr_install='(cd /little_red_rover_ws && apt update && rosdep update && rosdep install --from-paths src --ignore-src -y)'" >> /root/.bashrc
 RUN echo "alias lrr_build='(cd /little_red_rover_ws && catkin_make)'" >> /root/.bashrc

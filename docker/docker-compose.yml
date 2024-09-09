@@ -1,12 +1,12 @@
 services:
-    workspace:
-        image: ros_workspace
+    noetic_workspace:
+        image: noetic_ros_workspace
         build:
             context: ..
             dockerfile: docker/ros_workspace.Dockerfile
         tty: true # Prevent immediate exit when running with dev containers
         volumes:
-            - ../src:/little_red_rover_ws/src
+            - ../little_red_rover:/little_red_rover_ws/src/little_red_rover
             - ../tools:/tools
         ports:
             - "9002:9002" # gzweb

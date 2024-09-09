@@ -1,6 +1,6 @@
 {
-    "name": "ros_workspace",
-    "service": "workspace",
+    "name": "noetic_ros_workspace",
+    "service": "noetic_workspace",
     "dockerComposeFile": "../docker/docker-compose.yml",
     "workspaceFolder": "/little_red_rover_ws/src",
     "customizations": {
