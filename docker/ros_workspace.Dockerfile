@@ -43,7 +43,6 @@ RUN PROTOC_ZIP=protoc-27.3-linux-x86_64.zip && \
     unzip -o $PROTOC_ZIP -d /usr/local 'include/*' && \
     rm -f $PROTOC_ZIP
 
-
 RUN echo "alias lrr_install='(cd /little_red_rover_ws && apt update && rosdep update && rosdep install --from-paths src --ignore-src -y)'" >> /root/.bashrc
 RUN echo "alias lrr_build='(cd /little_red_rover_ws && catkin_make)'" >> /root/.bashrc
 # RUN echo "alias lrr_run='ros2 launch little_red_rover lrr.launch.py'" >> /root/.bashrc
