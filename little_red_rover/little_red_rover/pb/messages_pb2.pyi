@@ -66,7 +66,7 @@ class UdpPacket(_message.Message):
     LASER_FIELD_NUMBER: _ClassVar[int]
     JOINT_STATES_FIELD_NUMBER: _ClassVar[int]
     CMD_VEL_FIELD_NUMBER: _ClassVar[int]
-    laser: LaserScan
+    laser: _containers.RepeatedCompositeFieldContainer[LaserScan]
     joint_states: JointStates
     cmd_vel: TwistCmd
-    def __init__(self, laser: _Optional[_Union[LaserScan, _Mapping]] = ..., joint_states: _Optional[_Union[JointStates, _Mapping]] = ..., cmd_vel: _Optional[_Union[TwistCmd, _Mapping]] = ...) -> None: ...
+    def __init__(self, laser: _Optional[_Iterable[_Union[LaserScan, _Mapping]]] = ..., joint_states: _Optional[_Union[JointStates, _Mapping]] = ..., cmd_vel: _Optional[_Union[TwistCmd, _Mapping]] = ...) -> None: ...
