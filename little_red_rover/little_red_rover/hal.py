@@ -8,7 +8,6 @@ from geometry_msgs.msg import Twist
 
 import threading
 import socket
-
 import little_red_rover.pb.messages_pb2 as messages
 
 
@@ -51,8 +50,9 @@ class HAL:
                 print(e)
                 continue
 
-            if packet.HasField("laser"):
-                self.handle_laser_scan(laser_msg, packet.laser)
+            if len(packet.laser) != 0:
+                for scan in packet.laser:
+                    self.handle_laser_scan(laser_msg, scan)
             elif packet.HasField("joint_states"):
                 self.handle_joint_states(joint_state_msg, packet.joint_states)
 
@@ -66,7 +66,6 @@ class HAL:
 
     def handle_laser_scan(self, msg: LaserScan, packet: messages.LaserScan):
         break_in_packet = False
-
         for i in range(len(packet.ranges)):
             angle = packet.angle_min + (packet.angle_max - packet.angle_min) * (
                 i / (len(packet.ranges) - 1)
@@ -79,8 +78,9 @@ class HAL:
                 msg.ranges = self.ranges
                 msg.intensities = self.intensities
 
-                break_in_packet = True
                 self.scan_publisher.publish(msg)
+                break_in_packet = True
+
                 self.ranges = [0.0] * 720
                 self.intensities = [0.0] * 720
 
