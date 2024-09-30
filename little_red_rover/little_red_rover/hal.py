@@ -42,10 +42,19 @@ class HAL:
         joint_state_msg.header.frame_id = "robot_body"
 
         while not rospy.is_shutdown():
-            data = self.socket.recv(1500)
-            packet = messages.UdpPacket()
+            self.socket.settimeout(1.0)
             try:
+                data = self.socket.recv(1500)
+                packet = messages.UdpPacket()
                 packet.ParseFromString(data)
+            except socket.timeout:
+                print(
+                    "No data recieved from Little Red Rover for the past 1.0 seconds. As you sure you're connected to the rover's wifi hotspot?"
+                )
+                continue
+            except socket.error as e:
+                print(e)
+                continue
             except Exception as e:
                 print(e)
                 continue
