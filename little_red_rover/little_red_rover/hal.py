@@ -2,7 +2,7 @@ import rospy
 
 from math import floor, inf, pi
 
-from sensor_msgs.msg import JointState
+from sensor_msgs.msg import Imu, JointState
 from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import Twist
 
@@ -23,6 +23,7 @@ class HAL:
             "joint_states", JointState, queue_size=10
         )
         self.scan_publisher = rospy.Publisher("scan", LaserScan, queue_size=10)
+        self.imu_publisher = rospy.Publisher("imu/data_raw", Imu, queue_size=10)
 
         self.ranges = [0.0] * 720
         self.intensities = [0.0] * 720
@@ -40,6 +41,9 @@ class HAL:
 
         joint_state_msg = JointState()
         joint_state_msg.header.frame_id = "robot_body"
+
+        imu_msg = Imu()
+        imu_msg.header.frame_id = "robot_body"
 
         while not rospy.is_shutdown():
             self.socket.settimeout(1.0)
@@ -64,6 +68,8 @@ class HAL:
                     self.handle_laser_scan(laser_msg, scan)
             elif packet.HasField("joint_states"):
                 self.handle_joint_states(joint_state_msg, packet.joint_states)
+            elif packet.HasField("imu"):
+                self.handle_imu(imu_msg, packet.imu)
 
     def handle_joint_states(self, msg: JointState, packet: messages.JointStates):
         msg.header.stamp.set(packet.time.sec, packet.time.nanosec)
@@ -106,6 +112,21 @@ class HAL:
             ):
                 self.ranges[index] = inf
                 self.intensities[index] = 0.0
+
+    def handle_imu(self, msg: Imu, packet: messages.IMU):
+        msg.header.stamp.set(packet.time.sec, packet.time.nanosec)
+        msg.orientation_covariance = [-1.0] + [0.0] * 8
+        msg.linear_acceleration.x = packet.accel_x
+        msg.linear_acceleration.y = packet.accel_y
+        msg.linear_acceleration.z = packet.accel_z
+        # TODO
+        msg.linear_acceleration_covariance = [0.0] * 9
+        msg.angular_velocity.x = packet.gyro_x
+        msg.angular_velocity.y = packet.gyro_y
+        msg.angular_velocity.z = packet.gyro_z
+        # TODO
+        msg.angular_velocity_covariance = [0.0] * 9
+        self.imu_publisher.publish(msg)
 
     def cmd_vel_callback(self, msg: Twist):
         packet = messages.UdpPacket()
