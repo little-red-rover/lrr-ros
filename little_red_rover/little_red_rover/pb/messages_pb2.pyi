@@ -61,12 +61,32 @@ class JointStates(_message.Message):
     effort: _containers.RepeatedScalarFieldContainer[float]
     def __init__(self, time: _Optional[_Union[TimeStamp, _Mapping]] = ..., name: _Optional[_Iterable[str]] = ..., position: _Optional[_Iterable[float]] = ..., velocity: _Optional[_Iterable[float]] = ..., effort: _Optional[_Iterable[float]] = ...) -> None: ...
 
+class IMU(_message.Message):
+    __slots__ = ("time", "gyro_x", "gyro_y", "gyro_z", "accel_x", "accel_y", "accel_z")
+    TIME_FIELD_NUMBER: _ClassVar[int]
+    GYRO_X_FIELD_NUMBER: _ClassVar[int]
+    GYRO_Y_FIELD_NUMBER: _ClassVar[int]
+    GYRO_Z_FIELD_NUMBER: _ClassVar[int]
+    ACCEL_X_FIELD_NUMBER: _ClassVar[int]
+    ACCEL_Y_FIELD_NUMBER: _ClassVar[int]
+    ACCEL_Z_FIELD_NUMBER: _ClassVar[int]
+    time: TimeStamp
+    gyro_x: float
+    gyro_y: float
+    gyro_z: float
+    accel_x: float
+    accel_y: float
+    accel_z: float
+    def __init__(self, time: _Optional[_Union[TimeStamp, _Mapping]] = ..., gyro_x: _Optional[float] = ..., gyro_y: _Optional[float] = ..., gyro_z: _Optional[float] = ..., accel_x: _Optional[float] = ..., accel_y: _Optional[float] = ..., accel_z: _Optional[float] = ...) -> None: ...
+
 class UdpPacket(_message.Message):
-    __slots__ = ("laser", "joint_states", "cmd_vel")
+    __slots__ = ("laser", "joint_states", "cmd_vel", "imu")
     LASER_FIELD_NUMBER: _ClassVar[int]
     JOINT_STATES_FIELD_NUMBER: _ClassVar[int]
     CMD_VEL_FIELD_NUMBER: _ClassVar[int]
+    IMU_FIELD_NUMBER: _ClassVar[int]
     laser: _containers.RepeatedCompositeFieldContainer[LaserScan]
     joint_states: JointStates
     cmd_vel: TwistCmd
-    def __init__(self, laser: _Optional[_Iterable[_Union[LaserScan, _Mapping]]] = ..., joint_states: _Optional[_Union[JointStates, _Mapping]] = ..., cmd_vel: _Optional[_Union[TwistCmd, _Mapping]] = ...) -> None: ...
+    imu: IMU
+    def __init__(self, laser: _Optional[_Iterable[_Union[LaserScan, _Mapping]]] = ..., joint_states: _Optional[_Union[JointStates, _Mapping]] = ..., cmd_vel: _Optional[_Union[TwistCmd, _Mapping]] = ..., imu: _Optional[_Union[IMU, _Mapping]] = ...) -> None: ...
