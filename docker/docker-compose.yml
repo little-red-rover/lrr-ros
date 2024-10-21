@@ -1,10 +1,11 @@
 services:
     noetic_workspace:
-        image: noetic_ros_workspace
+        image: noetic_ros_workspace 
         build:
             context: ..
             dockerfile: docker/ros_workspace.Dockerfile
         tty: true # Prevent immediate exit when running with dev containers
+        network_mode: "host"
         volumes:
             - ../little_red_rover:/little_red_rover_ws/src/little_red_rover
             - ../tools:/tools
