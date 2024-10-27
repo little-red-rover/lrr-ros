@@ -17,6 +17,8 @@ class HAL:
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind(("0.0.0.0", 8001))
 
+        self.send_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
         self.subscription = rospy.Subscriber("cmd_vel", Twist, self.cmd_vel_callback)
 
         self.joint_state_publisher = rospy.Publisher(
@@ -133,7 +135,7 @@ class HAL:
         packet.cmd_vel.v = msg.linear.x
         packet.cmd_vel.w = msg.angular.z
 
-        self.socket.sendto(packet.SerializeToString(), ("192.168.4.1", 8001))
+        self.send_socket.sendto(packet.SerializeToString(), ("192.168.4.1", 8001))
 
 
 def main(args=None):
