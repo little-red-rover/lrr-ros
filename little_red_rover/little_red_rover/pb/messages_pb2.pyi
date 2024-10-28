@@ -79,7 +79,7 @@ class IMU(_message.Message):
     accel_z: float
     def __init__(self, time: _Optional[_Union[TimeStamp, _Mapping]] = ..., gyro_x: _Optional[float] = ..., gyro_y: _Optional[float] = ..., gyro_z: _Optional[float] = ..., accel_x: _Optional[float] = ..., accel_y: _Optional[float] = ..., accel_z: _Optional[float] = ...) -> None: ...
 
-class UdpPacket(_message.Message):
+class NetworkPacket(_message.Message):
     __slots__ = ("laser", "joint_states", "cmd_vel", "imu")
     LASER_FIELD_NUMBER: _ClassVar[int]
     JOINT_STATES_FIELD_NUMBER: _ClassVar[int]
