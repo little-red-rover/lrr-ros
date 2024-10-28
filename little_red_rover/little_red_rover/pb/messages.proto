@@ -42,7 +42,7 @@ message IMU {
   float accel_z = 7;
 }
 
-message UdpPacket {
+message NetworkPacket {
   repeated LaserScan laser = 1;
   optional JointStates joint_states = 2;
   optional TwistCmd cmd_vel = 3;

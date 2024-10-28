@@ -5,12 +5,9 @@ services:
             context: ..
             dockerfile: docker/ros_workspace.Dockerfile
         tty: true # Prevent immediate exit when running with dev containers
-        network_mode: "host"
         volumes:
             - ../little_red_rover:/little_red_rover_ws/src/little_red_rover
             - ../tools:/tools
         ports:
-            - "9002:9002" # gzweb
-            - "9090:9090" # rosbridge
-            - "8001:8001/udp" # agent -> rover
+            - "8001:8001" # agent -> rover
             - "8765:8765" # foxglove bridge
