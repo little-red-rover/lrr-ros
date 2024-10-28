@@ -1,6 +1,7 @@
 import rospy
+import struct
 
-from math import floor, inf, pi
+from math import inf, pi
 
 from sensor_msgs.msg import Imu, JointState
 from sensor_msgs.msg import LaserScan
@@ -13,12 +14,8 @@ import little_red_rover.pb.messages_pb2 as messages
 
 class HAL:
     def __init__(self):
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.socket.bind(("0.0.0.0", 8001))
-
-        self.send_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket.connect(("192.168.4.1", 8001))
         self.subscription = rospy.Subscriber("cmd_vel", Twist, self.cmd_vel_callback)
 
         self.joint_state_publisher = rospy.Publisher(
@@ -50,7 +47,9 @@ class HAL:
         while not rospy.is_shutdown():
             self.socket.settimeout(1.0)
             try:
-                data = self.socket.recv(1500)
+                length = struct.unpack("I", self.socket.recv(4))[0]
+                # print(length)
+                data = self.socket.recv(length)
                 packet = messages.UdpPacket()
                 packet.ParseFromString(data)
             except socket.timeout:
@@ -135,7 +134,7 @@ class HAL:
         packet.cmd_vel.v = msg.linear.x
         packet.cmd_vel.w = msg.angular.z
 
-        self.send_socket.sendto(packet.SerializeToString(), ("192.168.4.1", 8001))
+        self.socket.send(packet.SerializeToString())
 
 
 def main(args=None):
