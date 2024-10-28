@@ -22,12 +22,18 @@ class HAL:
 
         self.decode_error_count = 0
 
-        threading.Thread(target=self.run_loop).start()
+        threading.Thread(target=self.run_loop, daemon=True).start()
 
     def run_loop(self):
         while not rospy.is_shutdown():
             try:
-                data = self.connection.recv_packet()
+                data = None
+                while data == None:
+                    try:
+                        data = self.connection.recv_packet()
+                    except Exception as e:
+                        print(e)
+
                 packet = messages.NetworkPacket()
                 packet.ParseFromString(bytes(data))
 
@@ -39,7 +45,7 @@ class HAL:
                 if self.decode_error_count > 20:
                     print(f"Failed to decode {self.decode_error_count} packets.")
             except Exception as e:
-                print(f"Error: {e}")
+                print(f"HAL: Error - {e}")
 
 
 def main(_=None):
