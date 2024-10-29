@@ -42,10 +42,10 @@ class HAL:
 
             except DecodeError:
                 self.decode_error_count += 1
-                if self.decode_error_count > 20:
-                    print(f"Failed to decode {self.decode_error_count} packets.")
             except Exception as e:
                 print(f"HAL: Error - {e}")
+
+        self.connection.close()
 
 
 def main(_=None):

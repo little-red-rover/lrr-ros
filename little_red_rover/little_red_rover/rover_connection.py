@@ -46,6 +46,9 @@ class RoverConnection:
                 time.sleep(1.0)
                 print(f"Error while reconnecting: {e}. Trying again in 1 second...")
 
+    def close(self):
+        self.socket.close()
+
     def recv_length(self, length) -> bytes:
         data = bytearray()
         while len(data) < length:
