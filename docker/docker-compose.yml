@@ -6,7 +6,11 @@ services:
             dockerfile: docker/ros_workspace.Dockerfile
         tty: true # Prevent immediate exit when running with dev containers
         volumes:
-            - ../little_red_rover:/little_red_rover_ws/src/little_red_rover
+            - ../lrr_demos:/little_red_rover_ws/src/lrr_demos
+            - ../lrr_base:/little_red_rover_ws/src/lrr_base
+            - ../lrr_control:/little_red_rover_ws/src/lrr_control
+            - ../lrr_description:/little_red_rover_ws/src/lrr_description
+            - ../lrr_viz:/little_red_rover_ws/src/lrr_viz
             - ../tools:/tools
         ports:
             - "8001:8001" # agent -> rover
