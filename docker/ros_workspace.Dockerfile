@@ -7,7 +7,7 @@ RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /ros_setup.bash
 RUN apt-get update && \
     apt-get install -y --no-install-recommends python3 python3-pip wget curl protobuf-compiler libprotobuf-dev
 
-RUN pip3 install cryptography pathlib
+RUN pip3 install protobuf cryptography pathlib
 
 ### gazebo setup
 # RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg && \
@@ -33,7 +33,7 @@ RUN apt-get update && \
     rosdep update && \ 
     rosdep install --from-paths src --ignore-src -y 
 
-RUN source /ros_setup.bash && catkin_make
+RUN source /ros_setup.bash && catkin_make -DCMAKE_EXPORT_COMPILE_COMMANDS=1
 RUN echo "source /little_red_rover_ws/devel/setup.bash" >> /ros_setup.bash
 
 ### Dev env setup

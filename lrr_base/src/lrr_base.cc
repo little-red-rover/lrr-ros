@@ -1,16 +1,15 @@
 #include "ros/ros.h"
-#include "std_msgs/String.h"
 
-void chatterCallback(const std_msgs::String::ConstPtr &msg) {
-  ROS_INFO("I heard: [%s]", msg->data.c_str());
-}
+#include "lrr_base/lrr_hardware.h"
+
+using namespace lrr_base;
 
 int main(int argc, char **argv) {
-  ros::init(argc, argv, "listener");
+  ros::init(argc, argv, "lrr_base_node");
 
   ros::NodeHandle n;
 
-  ros::Subscriber sub = n.subscribe("chatter", 1000, chatterCallback);
+  LRRHardware hardware(n);
 
   ros::spin();
 

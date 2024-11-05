@@ -1,5 +1,5 @@
 services:
-    noetic_workspace:
+    noetic_ros_workspace:
         image: noetic_ros_workspace 
         build:
             context: ..

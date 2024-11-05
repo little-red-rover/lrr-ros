@@ -14,7 +14,7 @@ include_directories(
   ${PROTOBUF_INCLUDE_DIRS}
 )
 
-add_executable(lrr_base src/lrr_base.cc src/lrr_hardware.cc)
+add_executable(lrr_base src/lrr_base.cc src/lrr_hardware.cc src/lrr_connection.cc)
 
 add_dependencies(lrr_base ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} proto )
 target_link_libraries(lrr_base
