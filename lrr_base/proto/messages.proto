@@ -17,7 +17,7 @@ enum IncomingMessageID {
   incoming_msg_count = 1;
 };
 
-message SubscribeRequest { IncomingMessageID msg_id = 1; }
+message SubscribeRequest { OutgoingMessageID msg_id = 1; }
 
 message JointCmd {
   TimeStamp time = 1;
@@ -32,11 +32,12 @@ message IncomingCommand {
 
 // Outgoing
 enum OutgoingMessageID {
-  JOINT_STATES_DATA = 0;
-  IMU_DATA = 1;
-  LIDAR_DATA = 2;
-  BATTERY_DATA = 3;
-  outgoing_msg_count = 4;
+  NONE = 0;
+  JOINT_STATES_DATA = 1;
+  IMU_DATA = 2;
+  LIDAR_DATA = 3;
+  BATTERY_DATA = 4;
+  outgoing_msg_count = 5;
 };
 
 message LaserScan {

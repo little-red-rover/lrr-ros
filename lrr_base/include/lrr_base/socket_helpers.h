@@ -1,16 +1,30 @@
 #pragma once
 #include <cerrno>
+#include <cstdint>
+#include <cstdio>
 #include <fcntl.h>
 #include <poll.h>
 #include <sys/socket.h>
 #include <time.h>
 
 namespace SocketHelpers {
-inline int send_all(int fd, void *buffer, size_t size) {
-  // TODO
-  return -1;
+inline int send_all(int fd, const void *buffer, size_t size) {
+  // loop until the full requested length is placed into the buffer
+  ssize_t to_send = size;
+  while (to_send > 0) {
+    ssize_t sent =
+        send(fd, static_cast<const uint8_t *>(buffer) + (size - to_send),
+             to_send, 0);
+    if (sent < 0) {
+      // TODO: handle this
+      fprintf(stderr, "Socket recv failed with error code: %d", errno);
+      break;
+    }
+    to_send -= sent;
+  }
+  return 0;
 }
-inline int recv_all(int fd, void *buffer, size_t size) {
+inline int recv_all(int fd, const void *buffer, size_t size) {
   // TODO
   return -1;
 }

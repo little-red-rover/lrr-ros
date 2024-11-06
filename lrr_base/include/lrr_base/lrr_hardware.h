@@ -30,6 +30,17 @@ private:
   hardware_interface::JointStateInterface joint_state_interface_;
   hardware_interface::VelocityJointInterface velocity_joint_interface_;
 
+  struct Joint {
+    double position;
+    double velocity;
+    double effort;
+    double cmd_velocity;
+
+    Joint() : position(0), velocity(0), effort(0), cmd_velocity(0) {}
+  };
+
+  Joint joints_[2];
+
   // COMMUNICATION INTERFACES
   // data
   LRRConnection lidar_connection_;

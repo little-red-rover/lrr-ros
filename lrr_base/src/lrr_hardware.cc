@@ -1,4 +1,3 @@
-#include <cstdio>
 #include <ros/ros.h>
 
 #include "lrr_base/lrr_connection.h"
@@ -27,14 +26,36 @@ void joint_cmd_callback(OutgoingData &data) {
 }
 
 LRRHardware::LRRHardware(ros::NodeHandle node_handle)
-    : node_handle_(node_handle), lidar_connection_(lidar_callback),
-      imu_connection_(imu_callback),
-      joint_state_connection_(joint_state_callback),
-      joint_cmd_connection_(imu_callback) {
+    : node_handle_(node_handle), lidar_connection_(lidar_callback, LIDAR_DATA),
+      imu_connection_(imu_callback, IMU_DATA),
+      joint_state_connection_(joint_state_callback, JOINT_STATES_DATA),
+      joint_cmd_connection_(joint_cmd_callback, NONE) {
+
+  // Advertise ROS topics publishers
   imu_publisher_ = node_handle_.advertise<sensor_msgs::Imu>("imu/data_raw", 3);
   lidar_publisher_ = node_handle_.advertise<sensor_msgs::LaserScan>("scan", 3);
   joint_states_publisher_ =
       node_handle_.advertise<sensor_msgs::JointState>("joint_states", 3);
+}
+
+void LRRHardware::read_joints() {}
+
+void LRRHardware::write_joints() {
+  IncomingCommand cmd;
+
+  // Right wheel
+  cmd.mutable_joint_cmd()->set_joint(RIGHT_WHEEL);
+  cmd.mutable_joint_cmd()->set_vel(0.0);
+  cmd.mutable_joint_cmd()->mutable_time()->set_sec(ros::Time::now().sec);
+  cmd.mutable_joint_cmd()->mutable_time()->set_nanosec(ros::Time::now().nsec);
+  joint_cmd_connection_.send(cmd);
+
+  // Left wheel
+  cmd.mutable_joint_cmd()->set_joint(LEFT_WHEEL);
+  cmd.mutable_joint_cmd()->set_vel(0.0);
+  cmd.mutable_joint_cmd()->mutable_time()->set_sec(ros::Time::now().sec);
+  cmd.mutable_joint_cmd()->mutable_time()->set_nanosec(ros::Time::now().nsec);
+  joint_cmd_connection_.send(cmd);
 }
 
 }; // namespace lrr_base
