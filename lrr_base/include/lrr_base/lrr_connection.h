@@ -1,5 +1,7 @@
 #pragma once
 
+#include <boost/asio.hpp>
+#include <boost/asio/io_context.hpp>
 #include <ros/ros.h>
 #include <thread>
 
@@ -8,25 +10,25 @@
 namespace lrr_base {
 class LRRConnection {
 public:
-  LRRConnection(void (*callback)(OutgoingData &data),
+  LRRConnection(std::function<void(OutgoingData &)> callback,
                 OutgoingMessageID subscription);
   ~LRRConnection();
 
   void send(IncomingCommand cmd);
 
 private:
-  void thread_main_();
-  std::thread main_thread_;
+  void main_thread_();
+  std::thread main_thread_handle_;
 
-  void recv_loop_();
-  std::thread recv_thread_;
+  std::function<void(OutgoingData &)> callback_;
 
-  void (*callback_)(OutgoingData &data);
   OutgoingMessageID subscription_;
 
-  int socket_;
+  boost::asio::io_context io_context_;
+  boost::asio::ip::tcp::socket socket_;
 
-  int connect_();
+  void handle_connect_(const boost::system::error_code &err);
+  void handle_read_(const boost::system::error_code &err);
 
   void *send_buffer_;
 };

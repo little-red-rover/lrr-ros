@@ -14,7 +14,6 @@ class LRRHardware : public hardware_interface::RobotHW {
 public:
   LRRHardware(ros::NodeHandle node_handle);
 
-  void read_joints();
   void write_joints();
 
 private:
@@ -27,25 +26,27 @@ private:
   ros::Publisher joint_states_publisher_;
 
   // CONTROL INTERFACES
-  hardware_interface::JointStateInterface joint_state_interface_;
-  hardware_interface::VelocityJointInterface velocity_joint_interface_;
-
   struct Joint {
     double position;
     double velocity;
     double effort;
-    double cmd_velocity;
+    double velocity_command;
+    double position_offset;
 
-    Joint() : position(0), velocity(0), effort(0), cmd_velocity(0) {}
-  };
+    Joint()
+        : position(0), velocity(0), effort(0), velocity_command(0),
+          position_offset(std::numeric_limits<double>::quiet_NaN()) {}
+  } joints_[4];
 
-  Joint joints_[2];
+  hardware_interface::JointStateInterface joint_state_interface_;
+  hardware_interface::VelocityJointInterface velocity_joint_interface_;
 
   // COMMUNICATION INTERFACES
   // data
   LRRConnection lidar_connection_;
   LRRConnection imu_connection_;
   LRRConnection joint_state_connection_;
+
   // commands
   LRRConnection joint_cmd_connection_;
 };

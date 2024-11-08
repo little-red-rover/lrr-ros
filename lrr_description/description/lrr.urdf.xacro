@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<!-- Basic differential drive mobile base -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="little_red_rover">
+	<xacro:include
+		filename="$(find lrr_description)/description/rover/robot.urdf" />
+</robot>

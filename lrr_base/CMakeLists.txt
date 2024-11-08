@@ -1,12 +1,20 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(lrr_base)
 
+find_package(Boost REQUIRED COMPONENTS chrono)
+
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  controller_manager
+  hardware_interface
 )
 
-catkin_package()
+catkin_package(
+    INCLUDE_DIRS include
+    CATKIN_DEPENDS hardware_interface roscpp sensor_msgs
+    DEPENDS Boost
+)
 
 include_directories(
   include

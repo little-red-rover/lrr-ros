@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+    <node pkg="lrr_base" type="lrr_base" name="lrr_base_node" output="screen">
+    </node>
+
+    <!-- Differential controller parameters and basic localization -->
+    <include file="$(find lrr_control)/launch/control.launch" />
+
+    <!--Teleop -->
+    <include file="$(find lrr_control)/launch/teleop.launch" />   
+
+</launch>
