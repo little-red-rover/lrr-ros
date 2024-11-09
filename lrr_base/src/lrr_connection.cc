@@ -71,7 +71,10 @@ void LRRConnection::send(IncomingCommand cmd) {
 }
 
 void LRRConnection::handle_read_(const boost::system::error_code &err) {
-
+  // Setup next read
+  socket_.async_read_some(boost::asio::null_buffers(),
+                          boost::bind(&LRRConnection::handle_read_, this,
+                                      boost::asio::placeholders::error));
   // Get message size from delimiter
   size_t size = SocketHelpers::read_varint(socket_);
 
@@ -86,10 +89,5 @@ void LRRConnection::handle_read_(const boost::system::error_code &err) {
 
   // Call callback
   callback_(data);
-
-  // Setup next read
-  socket_.async_read_some(boost::asio::null_buffers(),
-                          boost::bind(&LRRConnection::handle_read_, this,
-                                      boost::asio::placeholders::error));
 }
 } // namespace lrr_base

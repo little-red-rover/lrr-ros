@@ -5,6 +5,7 @@ services:
             context: ..
             dockerfile: docker/ros_workspace.Dockerfile
         tty: true # Prevent immediate exit when running with dev containers
+        network_mode: "host"
         volumes:
             - ../lrr_demos:/little_red_rover_ws/src/lrr_demos
             - ../lrr_base:/little_red_rover_ws/src/lrr_base

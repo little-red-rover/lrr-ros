@@ -9,6 +9,8 @@
 #include "ros/node_handle.h"
 #include "ros/publisher.h"
 
+#include <tf2_ros/transform_listener.h>
+
 namespace lrr_base {
 class LRRHardware : public hardware_interface::RobotHW {
 public:
@@ -49,5 +51,9 @@ private:
 
   // commands
   LRRConnection joint_cmd_connection_;
+
+  // TF
+  tf2_ros::Buffer tf_buffer_;
+  tf2_ros::TransformListener tf_listener_;
 };
 }; // namespace lrr_base
