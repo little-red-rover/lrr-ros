@@ -1,5 +1,6 @@
 #pragma once
 
+#include <queue>
 #include <ros/ros.h>
 
 #include "hardware_interface/joint_command_interface.h"
@@ -26,6 +27,9 @@ private:
   ros::Publisher imu_publisher_;
   ros::Publisher lidar_publisher_;
   ros::Publisher joint_states_publisher_;
+  ros::Publisher battery_state_publisher_;
+  std::queue<float> battery_readings_;
+  float battery_readings_sum_;
 
   // CONTROL INTERFACES
   struct Joint {
@@ -48,6 +52,7 @@ private:
   LRRConnection lidar_connection_;
   LRRConnection imu_connection_;
   LRRConnection joint_state_connection_;
+  LRRConnection battery_connection_;
 
   // commands
   LRRConnection joint_cmd_connection_;

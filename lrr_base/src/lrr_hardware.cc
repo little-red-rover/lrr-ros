@@ -1,5 +1,6 @@
 #include "hardware_interface/joint_state_interface.h"
 #include "ros/node_handle.h"
+#include "sensor_msgs/BatteryState.h"
 #include "sensor_msgs/Imu.h"
 #include "sensor_msgs/JointState.h"
 #include "sensor_msgs/LaserScan.h"
@@ -9,6 +10,7 @@
 #include "lrr_base/lrr_connection.h"
 #include "lrr_base/lrr_hardware.h"
 
+#include <cmath>
 #include <tf2_ros/transform_listener.h>
 
 #include "laser_geometry/laser_geometry.h"
@@ -84,7 +86,7 @@ LRRHardware::LRRHardware(ros::NodeHandle node_handle)
             assert(imu.has_time());
 
             sensor_msgs::Imu ros_imu;
-            ros_imu.header.frame_id = "lidar";
+            ros_imu.header.frame_id = "base_link";
             ros_imu.header.stamp.sec = imu.time().sec();
             ros_imu.header.stamp.nsec = imu.time().nanosec();
 
@@ -112,11 +114,54 @@ LRRHardware::LRRHardware(ros::NodeHandle node_handle)
           [this](OutgoingData &data) {
             assert(data.has_joint_state());
             JointState js = data.joint_state();
+
+            // Update the variables read by ros_control
             joints_[js.joint()].position = js.position();
             joints_[js.joint()].velocity = js.velocity();
             joints_[js.joint()].effort = js.effort();
           },
           JOINT_STATES_DATA),
+      battery_connection_(
+          [this](OutgoingData &data) {
+            assert(data.has_battery());
+            Battery battery = data.battery();
+            assert(battery.has_time());
+
+            // ADC readings can be noisy and are sensitive to motor noise
+            // Apply a lowpass filter
+            battery_readings_.push(battery.voltage());
+            battery_readings_sum_ += battery.voltage();
+
+            if (battery_readings_.size() >= 10) {
+              battery_readings_sum_ -= battery_readings_.front();
+              battery_readings_.pop();
+            }
+
+            float battery_voltage =
+                battery_readings_sum_ / battery_readings_.size();
+
+            sensor_msgs::BatteryState ros_battery;
+            ros_battery.header.frame_id = "base_link";
+            ros_battery.header.stamp.sec = battery.time().sec();
+            ros_battery.header.stamp.nsec = battery.time().nanosec();
+
+            ros_battery.voltage = battery_voltage;
+            ros_battery.current = NAN;
+            ros_battery.charge = NAN;
+            ros_battery.capacity = NAN;
+            ros_battery.design_capacity = NAN;
+            ros_battery.percentage = (battery_voltage - 3.3) / (4.2 - 3.3);
+            ros_battery.power_supply_status =
+                sensor_msgs::BatteryState::POWER_SUPPLY_STATUS_UNKNOWN;
+            ros_battery.power_supply_health =
+                sensor_msgs::BatteryState::POWER_SUPPLY_HEALTH_GOOD;
+            ros_battery.power_supply_technology =
+                sensor_msgs::BatteryState::POWER_SUPPLY_TECHNOLOGY_LION;
+            ros_battery.present = true;
+            battery_state_publisher_.publish(ros_battery);
+          },
+          BATTERY_DATA),
+
       joint_cmd_connection_(
           [this](OutgoingData &data) {
             std::fprintf(
@@ -124,13 +169,16 @@ LRRHardware::LRRHardware(ros::NodeHandle node_handle)
                 "Recieved unexpected message on command only connection.\n");
           },
           NONE),
-      node_handle_(node_handle), tf_listener_(tf_buffer_) {
+      node_handle_(node_handle), tf_listener_(tf_buffer_),
+      battery_readings_sum_(0.0) {
 
   // Advertise ROS topics publishers
   imu_publisher_ = node_handle_.advertise<sensor_msgs::Imu>("imu/data_raw", 3);
   lidar_publisher_ = node_handle_.advertise<sensor_msgs::LaserScan>("scan", 3);
   joint_states_publisher_ =
       node_handle_.advertise<sensor_msgs::JointState>("joint_states", 3);
+  battery_state_publisher_ =
+      node_handle_.advertise<sensor_msgs::BatteryState>("battery_state", 3);
 
   // Register control interfaces
   ros::V_string joint_names =
