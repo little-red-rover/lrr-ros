@@ -62,7 +62,11 @@ LRRHardware::LRRHardware(ros::NodeHandle node_handle)
               }
 
               lidar_publisher_.publish(ros_scan);
-              // if (!tf_listener_.waitForTransform(
+
+              // TODO: Account for skew from movement, combine readings into
+              // single 360 scan for use with mapping packages if
+
+              // (!tf_listener_.waitForTransform(
               //         ros_scan.header.frame_id, "/base_link",
               //         ros_scan.header.stamp +
               //             ros::Duration().fromSec(scan_in->ranges.size() *
@@ -74,7 +78,35 @@ LRRHardware::LRRHardware(ros::NodeHandle node_handle)
           },
           LIDAR_DATA),
       imu_connection_(
-          [this](OutgoingData &data) { printf("Hit imu_callback\n"); },
+          [this](OutgoingData &data) {
+            assert(data.has_imu() != 0);
+            IMU imu = data.imu();
+            assert(imu.has_time());
+
+            sensor_msgs::Imu ros_imu;
+            ros_imu.header.frame_id = "lidar";
+            ros_imu.header.stamp.sec = imu.time().sec();
+            ros_imu.header.stamp.nsec = imu.time().nanosec();
+
+            // Disable orientation
+            ros_imu.orientation_covariance.at(0) = -1;
+
+            ros_imu.linear_acceleration.x = imu.accel_x();
+            ros_imu.linear_acceleration.y = imu.accel_y();
+            ros_imu.linear_acceleration.z = imu.accel_z();
+            // TODO: Calculate this value from data
+            std::fill(std::begin(ros_imu.linear_acceleration_covariance),
+                      std::begin(ros_imu.linear_acceleration_covariance), 0);
+
+            ros_imu.angular_velocity.x = imu.gyro_x();
+            ros_imu.angular_velocity.y = imu.gyro_y();
+            ros_imu.angular_velocity.z = imu.gyro_z();
+            // TODO: Calculate this value from data
+            std::fill(std::begin(ros_imu.angular_velocity_covariance),
+                      std::begin(ros_imu.angular_velocity_covariance), 0);
+
+            imu_publisher_.publish(ros_imu);
+          },
           IMU_DATA),
       joint_state_connection_(
           [this](OutgoingData &data) {
