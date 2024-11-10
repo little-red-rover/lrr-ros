@@ -18,7 +18,7 @@ void controlLoop(LRRHardware &hardware,
   ros::Duration elapsed(elapsed_duration.count());
   last_time = this_time;
   controller_mgr.update(ros::Time::now(), elapsed);
-  hardware.write_joints();
+  hardware.drive_base_driver.write_joints();
 }
 
 int main(int argc, char **argv) {
@@ -27,7 +27,8 @@ int main(int argc, char **argv) {
   ros::NodeHandle node;
   LRRHardware hardware(node);
 
-  controller_manager::ControllerManager controller_mgr(&hardware, node);
+  controller_manager::ControllerManager controller_mgr(
+      &hardware.drive_base_driver, node);
 
   ros::CallbackQueue lrr_queue;
   ros::AsyncSpinner lrr_spinner(1, &lrr_queue);

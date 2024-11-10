@@ -24,7 +24,16 @@ include_directories(
   ${PROTOBUF_INCLUDE_DIRS}
 )
 
-add_executable(lrr_base src/lrr_base.cc src/lrr_hardware.cc src/lrr_connection.cc)
+add_executable(
+    lrr_base 
+    src/lrr_base.cc 
+    src/lrr_hardware.cc 
+    src/lrr_connection.cc 
+    src/drivers/lidar_driver.cc
+    src/drivers/imu_driver.cc
+    src/drivers/battery_driver.cc
+    src/drivers/drive_base_driver.cc
+)
 
 add_dependencies(lrr_base ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} proto )
 target_link_libraries(lrr_base

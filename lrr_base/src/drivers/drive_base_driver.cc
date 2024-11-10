@@ -1,0 +1,62 @@
+#include "hardware_interface/joint_state_interface.h"
+
+#include "messages.pb.h"
+#include "ros/node_handle.h"
+#include "sensor_msgs/JointState.h"
+#include <boost/assign/list_of.hpp>
+
+#include "lrr_base/drivers/drive_base_driver.h"
+
+namespace lrr_base {
+
+DriveBaseDriver::DriveBaseDriver(ros::NodeHandle node_handle)
+    : connection_(this, JOINT_STATES_DATA) {
+  publisher_ =
+      node_handle.advertise<sensor_msgs::JointState>("joint_states", 3);
+
+  // Register control interfaces
+  ros::V_string joint_names =
+      boost::assign::list_of("wheel_left")("wheel_right");
+
+  for (unsigned int i = 0; i < joint_names.size(); i++) {
+    hardware_interface::JointStateHandle joint_state_handle(
+        joint_names[i], &joints_[i].position, &joints_[i].velocity,
+        &joints_[i].effort);
+    joint_state_interface_.registerHandle(joint_state_handle);
+
+    hardware_interface::JointHandle joint_handle(joint_state_handle,
+                                                 &joints_[i].velocity_command);
+    velocity_joint_interface_.registerHandle(joint_handle);
+  }
+  registerInterface(&joint_state_interface_);
+  registerInterface(&velocity_joint_interface_);
+}
+
+void DriveBaseDriver::parse(OutgoingData &data) {
+  assert(data.has_joint_state());
+  JointState js = data.joint_state();
+
+  // Update the variables read by ros_control
+  joints_[js.joint()].position = js.position();
+  joints_[js.joint()].velocity = js.velocity();
+  joints_[js.joint()].effort = js.effort();
+}
+
+void DriveBaseDriver::write_joints() {
+  IncomingCommand cmd;
+
+  // Right wheel
+  cmd.mutable_joint_cmd()->set_joint(RIGHT_WHEEL);
+  cmd.mutable_joint_cmd()->set_vel(joints_[RIGHT_WHEEL].velocity_command);
+  cmd.mutable_joint_cmd()->mutable_time()->set_sec(ros::Time::now().sec);
+  cmd.mutable_joint_cmd()->mutable_time()->set_nanosec(ros::Time::now().nsec);
+  connection_.send(cmd);
+
+  // Left wheel
+  cmd.mutable_joint_cmd()->set_joint(LEFT_WHEEL);
+  cmd.mutable_joint_cmd()->set_vel(joints_[LEFT_WHEEL].velocity_command);
+  cmd.mutable_joint_cmd()->mutable_time()->set_sec(ros::Time::now().sec);
+  cmd.mutable_joint_cmd()->mutable_time()->set_nanosec(ros::Time::now().nsec);
+  connection_.send(cmd);
+}
+} // namespace lrr_base

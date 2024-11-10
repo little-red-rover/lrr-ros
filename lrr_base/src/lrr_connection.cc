@@ -18,9 +18,9 @@
 #include "messages.pb.h"
 
 namespace lrr_base {
-LRRConnection::LRRConnection(std::function<void(OutgoingData &)> callback,
+LRRConnection::LRRConnection(ConnectionParser *connection_parser,
                              OutgoingMessageID subscription)
-    : callback_(callback), subscription_(subscription),
+    : connection_parser_(connection_parser), subscription_(subscription),
       socket_(boost::asio::ip::tcp::socket(io_context_)) {
   // Start main thread
   main_thread_handle_ = std::thread(&LRRConnection::main_thread_, this);
@@ -30,6 +30,7 @@ LRRConnection::~LRRConnection() {
   socket_.shutdown(boost::asio::socket_base::shutdown_both);
   socket_.close();
   main_thread_handle_.join();
+  delete connection_parser_;
 }
 
 void LRRConnection::main_thread_() {
@@ -88,6 +89,6 @@ void LRRConnection::handle_read_(const boost::system::error_code &err) {
   data.ParseFromIstream(&stream);
 
   // Call callback
-  callback_(data);
+  connection_parser_->parse(data);
 }
 } // namespace lrr_base

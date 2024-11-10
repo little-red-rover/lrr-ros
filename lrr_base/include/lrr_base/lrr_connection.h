@@ -8,9 +8,15 @@
 #include "messages.pb.h"
 
 namespace lrr_base {
+class ConnectionParser {
+public:
+  virtual void parse(OutgoingData &data) = 0;
+  virtual ~ConnectionParser() = default;
+};
+
 class LRRConnection {
 public:
-  LRRConnection(std::function<void(OutgoingData &)> callback,
+  LRRConnection(ConnectionParser *connection_parser,
                 OutgoingMessageID subscription);
   ~LRRConnection();
 
@@ -20,7 +26,7 @@ private:
   void main_thread_();
   std::thread main_thread_handle_;
 
-  std::function<void(OutgoingData &)> callback_;
+  ConnectionParser *connection_parser_;
 
   OutgoingMessageID subscription_;
 
