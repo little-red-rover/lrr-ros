@@ -9,14 +9,10 @@ find_package(catkin REQUIRED COMPONENTS
   controller_manager
   hardware_interface
   tf2
-  laser_geometry
+  tf2_geometry_msgs
 )
 
-catkin_package(
-    INCLUDE_DIRS include
-    CATKIN_DEPENDS hardware_interface roscpp sensor_msgs tf2 laser_geometry
-    DEPENDS Boost
-)
+catkin_package()
 
 include_directories(
   include

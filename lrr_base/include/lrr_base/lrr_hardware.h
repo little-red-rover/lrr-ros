@@ -24,5 +24,6 @@ public:
 private:
   // NODE
   ros::NodeHandle node_handle_;
+  ros::NodeHandle private_nh;
 };
 }; // namespace lrr_base

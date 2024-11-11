@@ -40,6 +40,12 @@ void DriveBaseDriver::parse(OutgoingData &data) {
   joints_[js.joint()].position = js.position();
   joints_[js.joint()].velocity = js.velocity();
   joints_[js.joint()].effort = js.effort();
+
+  if (js.joint() == RIGHT_WHEEL) {
+    joints_[js.joint()].position *= -1;
+    joints_[js.joint()].velocity *= -1;
+    joints_[js.joint()].effort *= -1;
+  }
 }
 
 void DriveBaseDriver::write_joints() {

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="2">
+    <name>lrr_navigation</name>
+    <version>0.0.0</version>
+    <description>The lrr_navigation package</description>
+
+    <maintainer email="michael@michael-crum.com">Michael Crumm</maintainer>
+
+    <license>TODO</license>
+
+    <url type="website">www.little-red-rover.com</url>
+
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <exec_depend>slam_toolbox</exec_depend>
+    <exec_depend>gmapping</exec_depend>
+
+    <export></export>
+</package>

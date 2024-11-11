@@ -18,6 +18,8 @@
     <build_depend>hardware_interface</build_depend>
     <build_depend>controller_manager</build_depend>
     <build_depend>tf2</build_depend>
+    <build_depend>tf2_ros</build_depend>
+    <build_depend>tf2_geometry_msgs</build_depend>
     <build_depend>laser_geometry</build_depend>
 
     <exec_depend>roscpp</exec_depend>
@@ -29,6 +31,8 @@
     <exec_depend>diff_drive_controller</exec_depend>
     <exec_depend>joint_state_controller</exec_depend>
     <exec_depend>tf2</exec_depend>
+    <exec_depend>tf2_ros</exec_depend>
+    <exec_depend>tf2_geometry_msgs</exec_depend>
     <exec_depend>laser_geometry</exec_depend>
 
     <export></export>

@@ -5,5 +5,5 @@
 	"mergeSTLs": "visual",
 	"packageName": "lrr_description/description/rover",
 	"addDummyBaseLink" : true,
-	"robotName" : "little red rover"
+	"robotName" : "little_red_rover"
 }
