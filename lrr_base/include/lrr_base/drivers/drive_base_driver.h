@@ -18,6 +18,8 @@ public:
 
   void write_joints();
 
+  void initialize_state();
+
 private:
   ros::Publisher publisher_;
   LRRConnection connection_;

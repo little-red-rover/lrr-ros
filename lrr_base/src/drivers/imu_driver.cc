@@ -18,16 +18,16 @@ ImuDriver::ImuDriver(ros::NodeHandle node_handle)
   std::fill(std::begin(msg_.linear_acceleration_covariance),
             std::begin(msg_.linear_acceleration_covariance), 0);
   // TODO: Currently eyeballed from graphs, could use formal verification
-  msg_.linear_acceleration_covariance[0] = 0.2;
-  msg_.linear_acceleration_covariance[3] = 0.2;
-  msg_.linear_acceleration_covariance[6] = 0.2;
+  msg_.linear_acceleration_covariance[0] = 0.05;
+  msg_.linear_acceleration_covariance[3] = 0.05;
+  msg_.linear_acceleration_covariance[6] = 0.05;
 
   std::fill(std::begin(msg_.angular_velocity_covariance),
             std::begin(msg_.angular_velocity_covariance), 0);
   // TODO: Same for these
-  msg_.angular_velocity_covariance[0] = 0.2;
-  msg_.angular_velocity_covariance[3] = 0.2;
-  msg_.angular_velocity_covariance[6] = 0.2;
+  msg_.angular_velocity_covariance[0] = 0.05;
+  msg_.angular_velocity_covariance[3] = 0.05;
+  msg_.angular_velocity_covariance[6] = 0.05;
 };
 
 void ImuDriver::parse(OutgoingData &data) {

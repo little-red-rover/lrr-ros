@@ -37,5 +37,7 @@ private:
   void handle_read_(const boost::system::error_code &err);
 
   void *send_buffer_;
+
+  bool connected_;
 };
 } // namespace lrr_base

@@ -28,12 +28,25 @@ DriveBaseDriver::DriveBaseDriver(ros::NodeHandle node_handle)
                                                  &joints_[i].velocity_command);
     velocity_joint_interface_.registerHandle(joint_handle);
   }
+
   registerInterface(&joint_state_interface_);
   registerInterface(&velocity_joint_interface_);
 }
 
+void DriveBaseDriver::initialize_state() {
+  joints_[0].position = 0.0;
+  joints_[0].velocity = 0.0;
+  joints_[0].effort = 0.0;
+
+  joints_[1].position = 0.0;
+  joints_[1].velocity = 0.0;
+  joints_[1].effort = 0.0;
+}
+
 void DriveBaseDriver::parse(OutgoingData &data) {
-  assert(data.has_joint_state());
+  if (!data.has_joint_state()) {
+    return;
+  }
   JointState js = data.joint_state();
 
   // Update the variables read by ros_control

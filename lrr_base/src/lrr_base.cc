@@ -30,6 +30,8 @@ int main(int argc, char **argv) {
   controller_manager::ControllerManager controller_mgr(
       &hardware.drive_base_driver, node);
 
+  hardware.drive_base_driver.initialize_state();
+
   ros::CallbackQueue lrr_queue;
   ros::AsyncSpinner lrr_spinner(1, &lrr_queue);
   time_source::time_point last_time = time_source::now();

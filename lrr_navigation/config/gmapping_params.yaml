@@ -10,13 +10,13 @@ lsigma: 0.075
 ogain: 3.0
 lskip: 0
 minimumScore: 50
-srr: 0.1
+srr: 1.0
 srt: 0.2
 str: 0.1
 stt: 0.2
 linearUpdate: 1.0
 angularUpdate: 0.2
-temporalUpdate: 0.5
+temporalUpdate: 0.0
 resampleThreshold: 0.5
 particles: 100
 xmin: -10.0
