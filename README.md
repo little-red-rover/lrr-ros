@@ -9,14 +9,18 @@
 
 ## Packages
 
-This repo contains the following packages useful for working with Little Red Rover:
+This repo contains the following packages for working with Little Red Rover:
 
 ### lrr_base
 
-* Implementation of a [ROS control](http://wiki.ros.org/ros_control) [hardware_interface](https://docs.ros.org/en/melodic/api/hardware_interface/html/c++/index.html).
-  * Exposes a `JointPublisher` and a `JointVelocityController`
-  * Makes the rover compatible with the standard ROS control [differential drive controller](http://wiki.ros.org/diff_drive_controller)
-* Implements a TCP client for each data source, and relays the recieved data into native ROS messages.
+Nodes:
+* lrr_base
+  * Implementation of a [ROS control](http://wiki.ros.org/ros_control) [hardware_interface](https://docs.ros.org/en/melodic/api/hardware_interface/html/c++/index.html).
+    * Exposes a `JointPublisher` and a `JointVelocityController`
+    * Makes the rover compatible with the standard ROS control [differential drive controller](http://wiki.ros.org/diff_drive_controller)
+  * Implements a TCP client for each data source
+    * Relays the recieved data into native ROS messages
+    * Forwards joint state commands to the rover
 
 Launch Files:
 * base.launch
@@ -27,7 +31,7 @@ Launch Files:
 
 ### lrr_description
 
-* Contains a URDF (universal robot description format) description of the rover, generated from [the rover's CAD](https://cad.onshape.com/documents/3c9bcb798eb55dc89c3300c0/w/50990f614f9cfbc3dc016690/e/81981a5257c68cf876fffafa?renderMode=0&uiState=662964f9611b155af71d904d) using [onshape-to-robot](https://github.com/Rhoban/onshape-to-robot)
+Contains a URDF (universal robot description format) description of the rover, generated from [the rover's CAD](https://cad.onshape.com/documents/3c9bcb798eb55dc89c3300c0/w/50990f614f9cfbc3dc016690/e/81981a5257c68cf876fffafa?renderMode=0&uiState=662964f9611b155af71d904d) using [onshape-to-robot](https://github.com/Rhoban/onshape-to-robot)
 
 Launch Files:
 * description.launch
