@@ -16,4 +16,5 @@ LRRHardware::LRRHardware(ros::NodeHandle node_handle)
       node_handle_(node_handle) {
   ROS_INFO("LRR Base initialized");
 }
+
 }; // namespace lrr_base

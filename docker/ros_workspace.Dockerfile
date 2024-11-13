@@ -20,12 +20,14 @@ RUN pip3 install protobuf cryptography pathlib
 RUN echo "export LIBGL_ALWAYS_SOFTWARE=true" >> /ros_setup.bash
 
 ### Setup ROS workspace
-RUN mkdir -p /little_red_rover_ws/src/lrr_{demos,base,control,description}
+RUN mkdir -p /little_red_rover_ws/src/lrr_{demos,base,control,description,viz,navigation}
 
 COPY ./lrr_demos /little_red_rover_ws/src/lrr_demos
 COPY ./lrr_base /little_red_rover_ws/src/lrr_base
 COPY ./lrr_control /little_red_rover_ws/src/lrr_control
 COPY ./lrr_description /little_red_rover_ws/src/lrr_description
+COPY ./lrr_viz /little_red_rover_ws/src/lrr_viz
+COPY ./lrr_navigation /little_red_rover_ws/src/lrr_navigation
 
 WORKDIR /little_red_rover_ws
 

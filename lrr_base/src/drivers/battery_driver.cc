@@ -28,7 +28,6 @@ BatteryDriver::BatteryDriver(ros::NodeHandle node_handle)
 };
 
 void BatteryDriver::parse(OutgoingData &data) {
-
   assert(data.has_battery());
   Battery battery = data.battery();
   assert(battery.has_time());

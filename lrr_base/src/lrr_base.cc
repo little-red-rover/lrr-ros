@@ -17,6 +17,7 @@ void controlLoop(LRRHardware &hardware,
   boost::chrono::duration<double> elapsed_duration = this_time - last_time;
   ros::Duration elapsed(elapsed_duration.count());
   last_time = this_time;
+
   controller_mgr.update(ros::Time::now(), elapsed);
   hardware.drive_base_driver.write_joints();
 }
@@ -29,8 +30,6 @@ int main(int argc, char **argv) {
 
   controller_manager::ControllerManager controller_mgr(
       &hardware.drive_base_driver, node);
-
-  hardware.drive_base_driver.initialize_state();
 
   ros::CallbackQueue lrr_queue;
   ros::AsyncSpinner lrr_spinner(1, &lrr_queue);
