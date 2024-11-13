@@ -15,7 +15,7 @@ inline int read_varint(boost::asio::ip::tcp::socket &socket) {
   int result = 0;
   int shift = 0;
   do {
-    assert(boost::asio::read(socket, boost::asio::buffer(buffer, 1)) == 1);
+    boost::asio::read(socket, boost::asio::buffer(buffer, 1));
     result |= (buffer[0] & 0x7f) << shift;
     shift += 7;
   } while (buffer[0] & 0x80);

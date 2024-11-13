@@ -39,9 +39,6 @@ LidarDriver::LidarDriver(ros::NodeHandle node_handle)
 void LidarDriver::parse(OutgoingData &data) {
   assert(data.laser_size() != 0);
   if (tf_buffer_._frameExists("odom")) {
-    // TODO: This is mean to correct for the delay in recieving scans by
-    // registering them with the TF frame from when they were measured.
-    // Currently it seems to just confuse SLAM rather than helping
     // frame_ = "odom";
   }
   for (LaserScan scan : data.laser()) {
@@ -65,8 +62,8 @@ void LidarDriver::parse(OutgoingData &data) {
     try {
       auto transform = tf_buffer_.lookupTransform(
           msg_.header.frame_id, frame_,
-          msg_.header.stamp + ros::Duration().fromSec(scan_time),
-          ros::Duration(0.01));
+          msg_.header.stamp + ros::Duration().fromSec(msg_.scan_time),
+          ros::Duration(1.0));
 
       for (size_t i = 0; i < scan.ranges_size(); i++) {
         // Account for triangulation offsets, see LD20 data sheet
@@ -89,6 +86,7 @@ void LidarDriver::parse(OutgoingData &data) {
       }
 
     } catch (tf2::TransformException &ex) {
+      ROS_WARN("Could NOT transform lidar frame : %s", ex.what());
       continue;
     }
   }
@@ -96,14 +94,15 @@ void LidarDriver::parse(OutgoingData &data) {
   if (point_batch_.size() >= SUBSAMPLE_POINTS) {
     // Transform points back into the lidar frame, then sample into a LaserScan
     // message Sample points back into a LaserScan message
+    msg_.header.stamp = ros::Time().now(); // TODO: use message time
+
     msg_.ranges.resize(SUBSAMPLE_POINTS);
     msg_.intensities.resize(SUBSAMPLE_POINTS);
     std::fill(msg_.ranges.begin(), msg_.ranges.end(), NAN);
     std::fill(msg_.intensities.begin(), msg_.intensities.end(), NAN);
-
     try {
       auto transform = tf_buffer_.lookupTransform(
-          frame_, msg_.header.frame_id, ros::Time().now(), ros::Duration(0.1));
+          frame_, msg_.header.frame_id, ros::Time().now(), ros::Duration(1.0));
       for (size_t i = 0; i < point_batch_.size(); i++) {
         geometry_msgs::Point point = point_batch_[i];
         geometry_msgs::Point out;
@@ -116,9 +115,8 @@ void LidarDriver::parse(OutgoingData &data) {
         msg_.intensities[idx] = intensity_batch_[i];
       }
     } catch (tf2::TransformException &ex) {
+      ROS_WARN("Could NOT transform lidar frame : %s", ex.what());
     }
-
-    msg_.header.stamp = ros::Time().now();
 
     publisher_.publish(msg_);
 

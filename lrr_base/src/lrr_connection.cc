@@ -2,7 +2,6 @@
 
 #include <arpa/inet.h>
 #include <boost/asio/completion_condition.hpp>
-#include <boost/asio/error.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/system/system_error.hpp>
 #include <cstdio>
@@ -28,31 +27,19 @@ LRRConnection::LRRConnection(ConnectionParser *connection_parser,
       socket_(boost::asio::ip::tcp::socket(io_context_)), connected_(false) {
   // Start main thread
   main_thread_handle_ = std::thread(&LRRConnection::main_thread_, this);
-
-  // struct timeval tv;
-  // tv.tv_sec = 1000;
-  // tv.tv_usec = 0;
-  // setsockopt(socket_.native_handle(), SOL_SOCKET, SO_RCVTIMEO, &tv,
-  // sizeof(tv)); setsockopt(socket_.native_handle(), SOL_SOCKET, SO_SNDTIMEO,
-  // &tv, sizeof(tv));
 }
 
 LRRConnection::~LRRConnection() {
-  if (socket_.is_open()) {
-    socket_.shutdown(boost::asio::socket_base::shutdown_both);
-    socket_.close();
-  }
+  socket_.shutdown(boost::asio::socket_base::shutdown_both);
+  socket_.close();
   main_thread_handle_.join();
 }
 
 void LRRConnection::main_thread_() {
   // Connect to rover
   std::printf("Attempting to connect to rover:\n");
-
   boost::asio::ip::tcp::endpoint endpoint(
-      boost::asio::ip::address::from_string("192.168.4.1"),
-      8001); // TODO: Make IP a parameter
-
+      boost::asio::ip::address::from_string("192.168.4.1"), 8001);
   socket_.async_connect(endpoint,
                         boost::bind(&LRRConnection::handle_connect_, this,
                                     boost::asio::placeholders::error));
@@ -61,26 +48,19 @@ void LRRConnection::main_thread_() {
   socket_.async_read_some(boost::asio::null_buffers(),
                           boost::bind(&LRRConnection::handle_read_, this,
                                       boost::asio::placeholders::error));
-
   boost::asio::io_service io_service;
   while (ros::ok()) {
     try {
-      io_context_.run_one();
+      io_context_.run();
     } catch (boost::system::system_error &e) {
       if (e.code().value() == boost::system::errc::broken_pipe ||
           e.code().value() == boost::asio::error::eof ||
-          e.code().value() == boost::system::errc::connection_reset ||
-          e.code().value() == boost::system::errc::network_unreachable) {
+          e.code().value() == boost::system::errc::connection_reset) {
 
         std::printf("Connection with rover dropped. Reconnecting...:\n");
         connected_ = false;
 
-        try {
-          socket_.shutdown(boost::asio::socket_base::shutdown_both);
-          socket_.close();
-        } catch (boost::system::system_error) {
-          socket_.close();
-        }
+        socket_.close();
 
         boost::asio::ip::tcp::endpoint endpoint(
             boost::asio::ip::address::from_string("192.168.4.1"), 8001);
@@ -140,28 +120,22 @@ void LRRConnection::handle_read_(const boost::system::error_code &err) {
     return;
   }
 
-  // Get message size from delimiter
-  size_t size = SocketHelpers::read_varint(socket_);
-
-  if (size == 0) {
-    printf("Got EOF\n");
-    return;
-  }
-
   // Start the next read
   socket_.async_read_some(boost::asio::null_buffers(),
                           boost::bind(&LRRConnection::handle_read_, this,
                                       boost::asio::placeholders::error));
 
+  // Get message size from delimiter
+  size_t size = SocketHelpers::read_varint(socket_);
+
   // Create input stream for message
   boost::asio::streambuf b;
-  size_t num_read =
-      boost::asio::read(socket_, b, boost::asio::transfer_exactly(size));
-  assert(num_read == size);
+  boost::asio::read(socket_, b, boost::asio::transfer_exactly(size));
   std::istream stream(&b);
 
   // Read message
   OutgoingData data;
+
   data.ParseFromIstream(&stream);
 
   // Call callback

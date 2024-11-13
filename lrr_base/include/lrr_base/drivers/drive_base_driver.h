@@ -10,8 +10,8 @@
 #include "messages.pb.h"
 
 namespace lrr_base {
-class DriveBaseDriver : public hardware_interface::RobotHW,
-                        public ConnectionParser {
+class DriveBaseDriver : public ConnectionParser,
+                        public hardware_interface::RobotHW {
 public:
   DriveBaseDriver(ros::NodeHandle node_handle);
   void parse(OutgoingData &data);
@@ -21,8 +21,8 @@ public:
   void initialize_state();
 
 private:
-  LRRConnection outgoing_connection_;
-  LRRConnection incoming_connection_;
+  ros::Publisher publisher_;
+  LRRConnection connection_;
 
   // CONTROL INTERFACES
   struct Joint {
