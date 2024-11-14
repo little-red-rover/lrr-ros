@@ -51,16 +51,23 @@ void LRRConnection::main_thread_() {
   boost::asio::io_service io_service;
   while (ros::ok()) {
     try {
-      io_context_.run();
+      io_context_.poll();
     } catch (boost::system::system_error &e) {
       if (e.code().value() == boost::system::errc::broken_pipe ||
           e.code().value() == boost::asio::error::eof ||
           e.code().value() == boost::system::errc::connection_reset) {
 
-        std::printf("Connection with rover dropped. Reconnecting...:\n");
+        std::printf("Connection with rover dropped: %s\n", e.what());
+        std::printf("Reconnecting...:\n");
+
         connected_ = false;
 
-        socket_.close();
+        try {
+          socket_.shutdown(boost::asio::socket_base::shutdown_both);
+          socket_.close();
+        } catch (boost::system::system_error) {
+          socket_.close();
+        }
 
         boost::asio::ip::tcp::endpoint endpoint(
             boost::asio::ip::address::from_string("192.168.4.1"), 8001);
