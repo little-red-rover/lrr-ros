@@ -1,0 +1,38 @@
+# based on https://github.com/husky/husky/blob/noetic-devel/husky_control/config/control.yaml
+lrr_joint_publisher:
+  type: "joint_state_controller/JointStateController"
+  publish_rate: 50
+
+lrr_velocity_controller:
+  type: "diff_drive_controller/DiffDriveController"
+  left_wheel: 'wheel_left'
+  right_wheel: 'wheel_right'
+  publish_rate: 50
+  pose_covariance_diagonal: [0.1, 0.1, 0.1, 0.1, 0.1, 1.0]
+  twist_covariance_diagonal: [0.1, 0.1, 0.1, 0.1, 0.1, 0.5]
+  cmd_vel_timeout: 0.25
+  velocity_rolling_window_size: 2
+
+  wheel_separation: 0.13
+  wheel_radius: 0.03048
+
+  # Publish final output cmd_vel
+  publish_cmd: true
+
+  # Base frame_id
+  base_frame_id: base_link
+
+  # Odometry fused with IMU is published by robot_localization, so
+  # no need to publish a TF based on encoders alone.
+  enable_odom_tf: false
+
+  linear:
+    x:
+      has_velocity_limits    : true
+      max_velocity           : 1.0   # m/s
+      has_acceleration_limits: false
+  angular:
+    z:
+      has_velocity_limits    : true
+      max_velocity           : 4.0   # rad/s
+      has_acceleration_limits: false

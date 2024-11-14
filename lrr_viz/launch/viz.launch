@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+<include file="$(find foxglove_bridge)/launch/foxglove_bridge.launch">
+        <arg name="port" value="8765" />
+</include>
+</launch>

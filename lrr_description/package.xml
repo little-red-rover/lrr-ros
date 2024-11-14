@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package format="2">
+    <name>lrr_description</name>
+    <version>0.0.0</version>
+    <description>The lrr_description package</description>
+
+    <maintainer email="michael@michael-crum.com">Michael Crum</maintainer>
+    <url type="website">https://little-red-rover.com</url>
+    <author email="michael@michael-crum.com">Michael Crum</author>
+
+    <license>LGPLv2.1</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <exec_depend>urdf</exec_depend>
+    <exec_depend>xacro</exec_depend>
+
+    <export>
+    </export>
+</package>

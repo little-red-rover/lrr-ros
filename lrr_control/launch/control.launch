@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+    <include file="$(find lrr_description)/launch/description.launch"/>
+
+    <rosparam command="load" file="$(find lrr_control)/config/control.yaml" />
+
+    <!-- Spawn controllers -->
+    <node name="base_controller_spawner" pkg="controller_manager" type="spawner"
+        args="lrr_velocity_controller lrr_joint_publisher" output="screen"/>
+
+    <!-- Run EKF for localization -->
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization" output="screen">
+      <rosparam command="load" file="$(find lrr_control)/config/ekf.yaml" />
+    </node>
+
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+</launch>

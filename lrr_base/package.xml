@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<package format="2">
+    <name>lrr_base</name>
+    <version>0.0.0</version>
+    <description>The lrr_base package</description>
+
+    <maintainer email="michael@michael-crum.com">Michael Crumm</maintainer>
+
+    <license>TODO</license>
+
+    <url type="website">www.little-red-rover.com</url>
+
+    <buildtool_depend>catkin</buildtool_depend>
+    <build_depend>roscpp</build_depend>
+    <build_depend>std_msgs</build_depend>
+    <build_depend>ros_control</build_depend>
+    <build_depend>sensor_msgs</build_depend>
+    <build_depend>hardware_interface</build_depend>
+    <build_depend>controller_manager</build_depend>
+    <build_depend>tf2</build_depend>
+    <build_depend>tf2_ros</build_depend>
+    <build_depend>tf2_geometry_msgs</build_depend>
+    <build_depend>laser_geometry</build_depend>
+
+    <exec_depend>roscpp</exec_depend>
+    <exec_depend>std_msgs</exec_depend>
+    <exec_depend>ros_control</exec_depend>
+    <exec_depend>sensor_msgs</exec_depend>
+    <exec_depend>controller_manager</exec_depend>
+    <exec_depend>hardware_interface</exec_depend>
+    <exec_depend>diff_drive_controller</exec_depend>
+    <exec_depend>joint_state_controller</exec_depend>
+    <exec_depend>tf2</exec_depend>
+    <exec_depend>tf2_ros</exec_depend>
+    <exec_depend>tf2_geometry_msgs</exec_depend>
+    <exec_depend>laser_geometry</exec_depend>
+
+    <export></export>
+</package>

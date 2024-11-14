@@ -1,0 +1,260 @@
+<robot name="little_red_rover">
+<link name="base_link"></link>
+<joint name="base_link_to_base" type="fixed">
+<parent link="base_link"/>
+<child link="robot_body" />
+<origin rpy="0.0 0 0" xyz="0 0 0"/>
+</joint>
+<link name="robot_body">
+<collision>
+<origin xyz="0.074999999999999691913 1.1093356479670478514e-31 0.044979999999999825677" rpy="-4.5926041576390595874e-31 -9.1852083152781191747e-31 -3.141592653589793116" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/skid.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="0.00010000000000388330527 0.027499999999998463174 0.030480000000000832816" rpy="9.9920072216264838056e-16 -1.5707963267948712449 0" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/tt_motor_mount.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="0.074999999999999691913 9.5526125241606898312e-32 0.046279999999999751892" rpy="3.141592653589793116 -9.1852083152781191747e-31 -3.141592653589793116" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/motor_attachment_shim.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="3.6203678943636058724e-15 0.027499999999998445827 0.030480000000000645466" rpy="-1.3795654573633716087e-29 -1.5707963267948705788 0" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/motor_mount_shim.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="0.074999999999999691913 1.0785207688568520777e-31 0.045279999999999806515" rpy="-4.5926041576390595874e-31 -9.1852083152781191747e-31 -3.141592653589793116" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/lidar_motor.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="0.074999999999999691913 1.0785207688568520777e-31 0.045279999999999806515" rpy="-4.5926041576390595874e-31 -9.1852083152781191747e-31 -3.141592653589793116" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/pcb.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="0.074999999999999691913 1.0785207688568520777e-31 0.045279999999999806515" rpy="-4.5926041576390595874e-31 -9.1852083152781191747e-31 -3.141592653589793116" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/lidar_top.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="3.462508058049723921e-15 -0.02749999999999835909 0.030480000000000211785" rpy="1.5556462360342615066e-29 -1.570796326794871689 0" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/motor_mount_shim.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="0.074999999999999691913 1.0785207688568520777e-31 0.045279999999999806515" rpy="-4.5926041576390595874e-31 -9.1852083152781191747e-31 -3.141592653589793116" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/motor_attachment_shim.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="0.00010000000000341492993 -0.027499999999998553379 0.030480000000000454646" rpy="-6.5919492087119576778e-16 -1.5707963267948701347 0" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/tt_motor_mount.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="3.6203678943636058724e-15 0.027499999999998445827 0.030480000000000645466" rpy="-3.141592653589793116 1.570796326794871689 0" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/tt_motor_3777_v10.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="3.6203678943636058724e-15 0.027499999999998445827 0.030480000000000645466" rpy="-3.141592653589793116 1.570796326794871689 0" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/tt_motor_3777_v10.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="3.6203678943636058724e-15 0.027499999999998445827 0.030480000000000645466" rpy="-3.141592653589793116 1.570796326794871689 0" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/tt_motor_3777_v10.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="3.6203678943636058724e-15 0.027499999999998445827 0.030480000000000645466" rpy="-3.141592653589793116 1.570796326794871689 0" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/tt_motor_3777_v10.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="3.6203678943636058724e-15 0.027499999999998445827 0.030480000000000645466" rpy="-3.141592653589793116 1.570796326794871689 0" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/tt_motor_3777_v10.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="3.6203678943636058724e-15 0.027499999999998445827 0.030480000000000645466" rpy="-3.141592653589793116 1.570796326794871689 0" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/tt_motor_3777_v10.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="3.6203678943636058724e-15 0.027499999999998445827 0.030480000000000645466" rpy="-3.141592653589793116 1.570796326794871689 0" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/tt_motor_3777_v10.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="3.6203678943636058724e-15 0.027499999999998445827 0.030480000000000645466" rpy="-3.141592653589793116 1.570796326794871689 0" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/tt_motor_3777_v10.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="3.2630148583124017547e-15 -0.027499999999998539502 0.03048000000000037138" rpy="1.5950892812953118166e-29 -1.570796326794871689 0" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/tt_motor_3777_v10.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="3.2630148583124017547e-15 -0.027499999999998539502 0.03048000000000037138" rpy="1.5950892812953118166e-29 -1.570796326794871689 0" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/tt_motor_3777_v10.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="3.2630148583124017547e-15 -0.027499999999998539502 0.03048000000000037138" rpy="1.5950892812953118166e-29 -1.570796326794871689 0" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/tt_motor_3777_v10.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="3.2630148583124017547e-15 -0.027499999999998539502 0.03048000000000037138" rpy="1.5950892812953118166e-29 -1.570796326794871689 0" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/tt_motor_3777_v10.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="3.2630148583124017547e-15 -0.027499999999998539502 0.03048000000000037138" rpy="1.5950892812953118166e-29 -1.570796326794871689 0" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/tt_motor_3777_v10.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="3.2630148583124017547e-15 -0.027499999999998539502 0.03048000000000037138" rpy="1.5950892812953118166e-29 -1.570796326794871689 0" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/tt_motor_3777_v10.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="3.2630148583124017547e-15 -0.027499999999998539502 0.03048000000000037138" rpy="1.5950892812953118166e-29 -1.570796326794871689 0" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/tt_motor_3777_v10.stl"/>
+</geometry>
+</collision>
+<collision>
+<origin xyz="3.2630148583124017547e-15 -0.027499999999998539502 0.03048000000000037138" rpy="1.5950892812953118166e-29 -1.570796326794871689 0" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/tt_motor_3777_v10.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0 0 0" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/robot_body_visual.stl"/>
+</geometry>
+<material name="robot_body_material">
+<color rgba="0.54600512915027987759 0.54055055757933434535 0.45074002316652145295 1.0"/>
+</material>
+</visual>
+<inertial>
+<origin xyz="0.049271831748334070367 7.7454997493469521486e-07 0.044649548257402249529" rpy="0 0 0"/>
+<mass value="0.2009726460542947124" />
+<inertia ixx="0.00013869360392619804029" ixy="8.9644321588557175653e-09"  ixz="-4.8027734112450597159e-05" iyy="0.00028503969796305324508" iyz="1.8759790504687691218e-09" izz="0.00031681588396516020649" />
+</inertial>
+</link>
+
+<link name="lidar">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="lidar_frame" type="fixed">
+<origin xyz="0.074999999999999816813 -3.4694469519534816848e-18 0.065564999999999720726" rpy="3.4502589120532306517e-29 -5.578680289165322067e-30 1.1515748295240288399e-30" />
+<parent link="robot_body" />
+<child link="lidar" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<link name="wheel_left">
+<collision>
+<origin xyz="3.4694469519536141888e-18 3.4694469519536141888e-18 0.029940000000000015212" rpy="3.141592653589793116 -5.0580699046813964725e-33 -3.141592653589793116" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/wheel_left.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0 0 0" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/wheel_left_visual.stl"/>
+</geometry>
+<material name="wheel_left_material">
+<color rgba="0.98039215686274505668 0.71372549019607844922 0.0039215686274509803377 1.0"/>
+</material>
+</visual>
+<inertial>
+<origin xyz="2.623019758080288514e-17 5.2847079961555079783e-17 0.016300136674048160829" rpy="0 0 0"/>
+<mass value="0.060465499993623508801" />
+<inertia ixx="2.3167276380112803151e-05" ixy="-7.4674147420534043818e-22"  ixz="-1.1718170343165537995e-37" iyy="2.3166562982068070122e-05" iyz="7.3320609062518072402e-37" izz="3.8318422821940750637e-05" />
+</inertial>
+</link>
+
+<joint name="wheel_left" type="continuous">
+<origin xyz="3.6203678943636058724e-15 0.040799999999998386169 0.030480000000000645466" rpy="1.570796326794896558 -1.1789999146053913304 3.141592653589793116" />
+<parent link="robot_body" />
+<child link="wheel_left" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="wheel_right">
+<collision>
+<origin xyz="-6.9388939039072283776e-18 -3.4694469519536141888e-18 -0.029940000000000022151" rpy="3.141592653589793116 -2.2796299281793848779e-44 -1.0666597387892984954e-17" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/wheel_right.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0 0 0" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://lrr_description/description/rover/wheel_right_visual.stl"/>
+</geometry>
+<material name="wheel_right_material">
+<color rgba="0.98039215686274505668 0.71372549019607844922 0.0039215686274509803377 1.0"/>
+</material>
+</visual>
+<inertial>
+<origin xyz="-2.9160836131634292464e-17 -5.2608878684790795945e-17 -0.016300136674048244095" rpy="0 0 0"/>
+<mass value="0.060465499993623932073" />
+<inertia ixx="2.3167276380112898019e-05" ixy="3.7882117486134413823e-22"  ixz="5.0231703070057578677e-49" iyy="2.3166562982068168377e-05" iyz="-3.9703091509707728579e-49" izz="3.8318422821940838728e-05" />
+</inertial>
+</link>
+
+<joint name="wheel_right" type="continuous">
+<origin xyz="3.2630148583124013603e-15 -0.040799999999998497191 0.03048000000000037138" rpy="1.570796326794896558 -0.73960903976901759549 -3.141592653589793116" />
+<parent link="robot_body" />
+<child link="wheel_right" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+
+</robot>

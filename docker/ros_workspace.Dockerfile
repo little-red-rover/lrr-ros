@@ -5,7 +5,7 @@ RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /ros_setup.bash
 
 ### tooling
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends python3 python3-pip wget curl
+    apt-get install -y --no-install-recommends python3 python3-pip wget curl protobuf-compiler libprotobuf-dev
 
 RUN pip3 install protobuf cryptography pathlib
 
@@ -20,8 +20,12 @@ RUN pip3 install protobuf cryptography pathlib
 RUN echo "export LIBGL_ALWAYS_SOFTWARE=true" >> /ros_setup.bash
 
 ### Setup ROS workspace
-RUN mkdir -p /little_red_rover_ws/src/little_red_rover
-COPY ./little_red_rover /little_red_rover_ws/src/little_red_rover
+RUN mkdir -p /little_red_rover_ws/src/lrr_{demos,base,control,description}
+
+COPY ./lrr_demos /little_red_rover_ws/src/lrr_demos
+COPY ./lrr_base /little_red_rover_ws/src/lrr_base
+COPY ./lrr_control /little_red_rover_ws/src/lrr_control
+COPY ./lrr_description /little_red_rover_ws/src/lrr_description
 
 WORKDIR /little_red_rover_ws
 
@@ -29,7 +33,7 @@ RUN apt-get update && \
     rosdep update && \ 
     rosdep install --from-paths src --ignore-src -y 
 
-RUN source /ros_setup.bash && catkin_make
+RUN source /ros_setup.bash && catkin_make -DCMAKE_EXPORT_COMPILE_COMMANDS=1
 RUN echo "source /little_red_rover_ws/devel/setup.bash" >> /ros_setup.bash
 
 ### Dev env setup
@@ -44,7 +48,7 @@ RUN PROTOC_ZIP=protoc-27.3-linux-x86_64.zip && \
     rm -f $PROTOC_ZIP
 
 RUN echo "alias lrr_install='(cd /little_red_rover_ws && apt update && rosdep update && rosdep install --from-paths src --ignore-src -y)'" >> /root/.bashrc
-RUN echo "alias lrr_build='(cd /little_red_rover_ws && catkin_make)'" >> /root/.bashrc
+RUN echo "alias lrr_build='(cd /little_red_rover_ws && catkin_make -DCMAKE_EXPORT_COMPILE_COMMANDS=1)'" >> /root/.bashrc
 # RUN echo "alias lrr_run='ros2 launch little_red_rover lrr.launch.py'" >> /root/.bashrc
 RUN echo "alias lrr_connect='. /tools/wifi_auth.bash'" >> /root/.bashrc
 

@@ -1,0 +1,6 @@
+<launch>
+  <!-- Gmapping -->
+  <node pkg="gmapping" type="slam_gmapping" name="lrr_slam_gmapping" output="screen">
+    <rosparam command="load" file="$(find lrr_navigation)/config/gmapping_params.yaml" />
+  </node>
+</launch>
