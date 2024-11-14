@@ -50,30 +50,25 @@ void DriveBaseDriver::parse(OutgoingData &data) {
   JointState js = data.joint_state();
 
   // Update the variables read by ros_control
-  joints_[js.joint()].position = js.position();
-  joints_[js.joint()].velocity = js.velocity();
-  joints_[js.joint()].effort = js.effort();
+  joints_[0].position = js.left_position();
+  joints_[0].velocity = js.left_velocity();
+  joints_[0].effort = js.left_effort();
 
-  if (js.joint() == RIGHT_WHEEL) {
-    joints_[js.joint()].position *= -1;
-    joints_[js.joint()].velocity *= -1;
-    joints_[js.joint()].effort *= -1;
-  }
+  joints_[1].position = -js.right_position();
+  joints_[1].velocity = -js.right_velocity();
+  joints_[1].effort = -js.right_effort();
 }
 
 void DriveBaseDriver::write_joints() {
   IncomingCommand cmd;
 
-  // Right wheel
-  cmd.mutable_joint_cmd()->set_joint(RIGHT_WHEEL);
-  cmd.mutable_joint_cmd()->set_vel(joints_[RIGHT_WHEEL].velocity_command);
+  // Left wheel
+  cmd.mutable_joint_cmd()->set_left_vel(joints_[0].velocity_command);
   cmd.mutable_joint_cmd()->mutable_time()->set_sec(ros::Time::now().sec);
   cmd.mutable_joint_cmd()->mutable_time()->set_nanosec(ros::Time::now().nsec);
-  connection_.send(cmd);
 
-  // Left wheel
-  cmd.mutable_joint_cmd()->set_joint(LEFT_WHEEL);
-  cmd.mutable_joint_cmd()->set_vel(joints_[LEFT_WHEEL].velocity_command);
+  // Right wheel
+  cmd.mutable_joint_cmd()->set_right_vel(joints_[1].velocity_command);
   cmd.mutable_joint_cmd()->mutable_time()->set_sec(ros::Time::now().sec);
   cmd.mutable_joint_cmd()->mutable_time()->set_nanosec(ros::Time::now().nsec);
   connection_.send(cmd);
