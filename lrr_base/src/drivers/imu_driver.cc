@@ -7,8 +7,13 @@
 namespace lrr_base {
 
 ImuDriver::ImuDriver(ros::NodeHandle node_handle)
-    : connection_(this, IMU_DATA) {
+    : connection_(this, IMU_DATA), gyro_bias_x_(0.0), gyro_bias_y_(0.0),
+      gyro_bias_z_(0.0) {
   publisher_ = node_handle.advertise<sensor_msgs::Imu>("imu/data_raw", 3);
+
+  ros::param::get("~gyro_bias_x", gyro_bias_x_);
+  ros::param::get("~gyro_bias_y", gyro_bias_y_);
+  ros::param::get("~gyro_bias_z", gyro_bias_z_);
 
   msg_.header.frame_id = "base_link";
 
@@ -42,9 +47,9 @@ void ImuDriver::parse(OutgoingData &data) {
   msg_.linear_acceleration.y = imu.accel_y();
   msg_.linear_acceleration.z = imu.accel_z();
 
-  msg_.angular_velocity.x = imu.gyro_x();
-  msg_.angular_velocity.y = imu.gyro_y();
-  msg_.angular_velocity.z = imu.gyro_z() - 0.08;
+  msg_.angular_velocity.x = imu.gyro_x() - gyro_bias_x_;
+  msg_.angular_velocity.y = imu.gyro_y() - gyro_bias_y_;
+  msg_.angular_velocity.z = imu.gyro_z() - gyro_bias_z_;
 
   publisher_.publish(msg_);
 }

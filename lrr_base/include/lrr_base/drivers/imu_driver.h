@@ -18,5 +18,9 @@ private:
   LRRConnection connection_;
 
   sensor_msgs::Imu msg_;
+
+  float gyro_bias_x_;
+  float gyro_bias_y_;
+  float gyro_bias_z_;
 };
 } // namespace lrr_base

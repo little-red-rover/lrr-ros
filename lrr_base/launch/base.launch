@@ -2,6 +2,11 @@
 <launch>
     <!-- LRR Driver -->
     <node pkg="lrr_base" type="lrr_base" name="lrr_base_node" output="screen">
+        <rosparam>
+            gyro_bias_x: 0.05
+            gyro_bias_y: -0.06
+            gyro_bias_z: 0.08
+        </rosparam>
     </node>
 
     <!-- Differential controller parameters and basic localization -->
