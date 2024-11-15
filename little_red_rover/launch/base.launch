@@ -1,4 +1,0 @@
-<launch>
-    <include file="$(find little_red_rover)/launch/hardware.launch"/>
-    <include file="$(find little_red_rover)/launch/visualize.launch"/>
-</launch>

@@ -1,6 +1,0 @@
-<launch> 
-    <include file="$(find little_red_rover)/launch/base.launch"/>
-    <node pkg="teleop_twist_joy" name="teleop_twist_joy" type="teleop_node" output="screen">
-        <rosparam command="load" file="$(find little_red_rover)/config/joy_config.yaml" />
-    </node>
-</launch>

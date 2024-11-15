@@ -1,7 +1,0 @@
-<launch>
-    <include file="$(find foxglove_bridge)/launch/foxglove_bridge.launch">
-        <arg name="port" value="8765" />
-    </include>
-    <param name="robot_description" command="$(find xacro)/xacro $(find little_red_rover)/description/lrr.urdf.xacro"/>
-    <node name="lrr_state_pub" pkg="robot_state_publisher" type="robot_state_publisher"/>
-</launch>
