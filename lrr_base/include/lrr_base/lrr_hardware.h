@@ -13,7 +13,7 @@
 namespace lrr_base {
 class LRRHardware {
 public:
-  LRRHardware(ros::NodeHandle node_handle);
+  LRRHardware(ros::NodeHandle node_handle, ros::NodeHandle private_node_handle);
 
   // DRIVERS
   LidarDriver lidar_driver;

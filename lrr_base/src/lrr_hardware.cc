@@ -10,8 +10,9 @@
 
 namespace lrr_base {
 
-LRRHardware::LRRHardware(ros::NodeHandle node_handle)
-    : lidar_driver(node_handle), imu_driver(node_handle),
+LRRHardware::LRRHardware(ros::NodeHandle node_handle,
+                         ros::NodeHandle private_node_handle)
+    : lidar_driver(node_handle, private_node_handle), imu_driver(node_handle),
       drive_base_driver(node_handle), battery_driver(node_handle),
       node_handle_(node_handle) {
   ROS_INFO("LRR Base initialized");

@@ -14,6 +14,10 @@ find_package(catkin REQUIRED COMPONENTS
 
 catkin_package()
 
+install(DIRECTORY config launch
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}

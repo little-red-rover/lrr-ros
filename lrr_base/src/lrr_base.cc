@@ -2,6 +2,7 @@
 #include "ros/callback_queue.h"
 
 #include "lrr_base/lrr_hardware.h"
+#include "ros/time.h"
 
 #include <boost/chrono.hpp>
 
@@ -25,7 +26,8 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "lrr_base_node");
 
   ros::NodeHandle node;
-  LRRHardware hardware(node);
+  ros::NodeHandle private_node("~");
+  LRRHardware hardware(node, private_node);
 
   controller_manager::ControllerManager controller_mgr(
       &hardware.drive_base_driver, node);
