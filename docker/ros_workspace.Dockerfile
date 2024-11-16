@@ -39,7 +39,8 @@ RUN echo "source /little_red_rover_ws/devel/setup.bash" >> /ros_setup.bash
 ### Dev env setup
 RUN apt-get update && \
     apt-get install -y --no-install-recommends black iputils-ping python3-venv unzip && \
-    pip3 install black
+    pip3 install black && \
+    pip3 install -U numpy
 
 RUN PROTOC_ZIP=protoc-27.3-linux-x86_64.zip && \
     curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v27.3/$PROTOC_ZIP && \

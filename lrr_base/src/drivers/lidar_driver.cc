@@ -11,61 +11,55 @@
 #include "tf2_ros/transform_listener.h"
 #include <cmath>
 
-namespace lrr_base {
+namespace lrr_base
+{
 
 #define deg_2_rad(angleInDegrees) ((angleInDegrees) * M_PI / 180.0)
 #define OFFSET_X 5.9
 #define OFFSET_Y -20.14
-#define SUBSAMPLE_POINTS 360
+#define SUBSAMPLE_POINTS 720
+#define SCAN_POINTS 360
 
-LidarDriver::LidarDriver(ros::NodeHandle node_handle)
-    : connection_(this, LIDAR_DATA), tf_listener_(tf_buffer_) {
-  publisher_ = node_handle.advertise<sensor_msgs::LaserScan>("scan", 3);
-  publisher_cloud_ =
-      node_handle.advertise<sensor_msgs::PointCloud2>("cloud", 3);
+  LidarDriver::LidarDriver(ros::NodeHandle node_handle)
+      : connection_(this, LIDAR_DATA), tf_listener_(tf_buffer_)
+  {
+    publisher_ = node_handle.advertise<sensor_msgs::LaserScan>("scan", 3);
 
-  msg_.header.frame_id = "lidar";
-  msg_.range_min = 0.1;
-  msg_.range_max = 8.0;
-  msg_.scan_time = 0.1;
-  msg_.time_increment = 0;
-  msg_.angle_min = -M_PI;
-  msg_.angle_max = M_PI;
-  msg_.angle_increment = (msg_.angle_max - msg_.angle_min) / SUBSAMPLE_POINTS;
+    msg_.header.frame_id = "lidar";
+    msg_.range_min = 0.1;
+    msg_.range_max = 8.0;
+    msg_.scan_time = 0.1;
+    msg_.time_increment = 0;
+    msg_.angle_min = -M_PI;
+    msg_.angle_max = M_PI;
+    msg_.angle_increment = (msg_.angle_max - msg_.angle_min) / SCAN_POINTS;
 
-  frame_ = "base_link";
-};
+    frame_ = "base_link";
+  };
 
-void LidarDriver::parse(OutgoingData &data) {
-  assert(data.laser_size() != 0);
-  if (tf_buffer_._frameExists("odom")) {
-    // frame_ = "odom";
-  }
-  for (LaserScan scan : data.laser()) {
-    assert(scan.has_time());
+  void LidarDriver::parse(OutgoingData &data)
+  {
+    assert(data.laser_size() != 0);
 
-    msg_.header.stamp.sec = scan.time().sec();
-    msg_.header.stamp.nsec = scan.time().nanosec();
+    for (LaserScan scan : data.laser())
+    {
+      assert(scan.has_time());
 
-    double angle_min = deg_2_rad((float)scan.start_angle() / 100.0);
-    double angle_max = deg_2_rad((float)scan.end_angle() / 100.0);
-    if (angle_max < angle_min) {
-      angle_max = angle_max + 2 * M_PI;
-    }
-    double angle_increment = (angle_max - angle_min) / scan.ranges_size();
-    double time_increment = angle_increment / deg_2_rad((float)(scan.speed()));
-    double scan_time = time_increment * scan.ranges_size();
+      msg_.header.stamp.sec = scan.time().sec();
+      msg_.header.stamp.nsec = scan.time().nanosec();
 
-    // Convert points into a fixed frame, the append them to a running buffer
-    sensor_msgs::PointCloud2 cloud;
-    sensor_msgs::PointCloud2 local_cloud;
-    try {
-      auto transform = tf_buffer_.lookupTransform(
-          msg_.header.frame_id, frame_,
-          msg_.header.stamp + ros::Duration().fromSec(msg_.scan_time),
-          ros::Duration(1.0));
+      double angle_min = deg_2_rad((float)scan.start_angle() / 100.0);
+      double angle_max = deg_2_rad((float)scan.end_angle() / 100.0);
+      if (angle_max < angle_min)
+      {
+        angle_max = angle_max + 2 * M_PI;
+      }
+      double angle_increment = (angle_max - angle_min) / scan.ranges_size();
+      double time_increment = angle_increment / deg_2_rad((float)(scan.speed()));
+      double scan_time = time_increment * scan.ranges_size();
 
-      for (size_t i = 0; i < scan.ranges_size(); i++) {
+      for (size_t i = 0; i < scan.ranges_size(); i++)
+      {
         // Account for triangulation offsets, see LD20 data sheet
         float angle = angle_min + i * angle_increment;
         float distance = scan.ranges()[i] / 1000.0;
@@ -76,52 +70,39 @@ void LidarDriver::parse(OutgoingData &data) {
         angle += M_PI;
         angle *= -1;
 
-        geometry_msgs::Point in, out;
+        geometry_msgs::Point in;
         in.x = cos(angle) * distance;
         in.y = sin(angle) * distance;
-        tf2::doTransform(in, out, transform);
 
-        point_batch_.push_back(out);
+        point_batch_.push_back(in);
         intensity_batch_.push_back(scan.intensities()[i]);
       }
-
-    } catch (tf2::TransformException &ex) {
-      ROS_WARN("Could NOT transform lidar frame : %s", ex.what());
-      continue;
     }
-  }
 
-  if (point_batch_.size() >= SUBSAMPLE_POINTS) {
-    // Transform points back into the lidar frame, then sample into a LaserScan
-    // message Sample points back into a LaserScan message
-    msg_.header.stamp = ros::Time().now(); // TODO: use message time
+    if (point_batch_.size() >= SUBSAMPLE_POINTS)
+    {
+      msg_.header.stamp = ros::Time().now();
 
-    msg_.ranges.resize(SUBSAMPLE_POINTS);
-    msg_.intensities.resize(SUBSAMPLE_POINTS);
-    std::fill(msg_.ranges.begin(), msg_.ranges.end(), NAN);
-    std::fill(msg_.intensities.begin(), msg_.intensities.end(), NAN);
-    try {
-      auto transform = tf_buffer_.lookupTransform(
-          frame_, msg_.header.frame_id, ros::Time().now(), ros::Duration(1.0));
-      for (size_t i = 0; i < point_batch_.size(); i++) {
+      msg_.ranges.resize(SCAN_POINTS);
+      msg_.intensities.resize(SCAN_POINTS);
+      std::fill(msg_.ranges.begin(), msg_.ranges.end(), NAN);
+      std::fill(msg_.intensities.begin(), msg_.intensities.end(), NAN);
+      for (size_t i = 0; i < point_batch_.size(); i++)
+      {
         geometry_msgs::Point point = point_batch_[i];
-        geometry_msgs::Point out;
-        tf2::doTransform(point, out, transform);
         size_t idx =
-            (int)((atan2(out.y, out.x)) / (2 * M_PI) * SUBSAMPLE_POINTS) +
-            SUBSAMPLE_POINTS / 2;
-        float distance = sqrt(pow(out.x, 2) + pow(out.y, 2));
+            (int)((atan2(point.y, point.x) / (2 * M_PI)) * SCAN_POINTS +
+                  SCAN_POINTS / 2);
+        float distance = sqrt(pow(point.x, 2) + pow(point.y, 2));
+
         msg_.ranges[idx] = distance;
         msg_.intensities[idx] = intensity_batch_[i];
       }
-    } catch (tf2::TransformException &ex) {
-      ROS_WARN("Could NOT transform lidar frame : %s", ex.what());
+
+      publisher_.publish(msg_);
+
+      intensity_batch_.clear();
+      point_batch_.clear();
     }
-
-    publisher_.publish(msg_);
-
-    intensity_batch_.clear();
-    point_batch_.clear();
   }
-}
 } // namespace lrr_base

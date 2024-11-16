@@ -1,12 +1,7 @@
-<?xml version="1.0"?>
 <launch>
     <!-- LRR Driver -->
     <node pkg="lrr_base" type="lrr_base" name="lrr_base_node" output="screen">
-        <rosparam>
-            gyro_bias_x: 0.05
-            gyro_bias_y: -0.06
-            gyro_bias_z: 0.08
-        </rosparam>
+        <rosparam command="load" file="$(find lrr_base)/config/laser_filter.yaml" />
     </node>
 
     <!-- Differential controller parameters and basic localization -->
@@ -14,6 +9,5 @@
 
     <!--Teleop -->
     <include file="$(find lrr_control)/launch/teleop.launch" />   
-
 
 </launch>

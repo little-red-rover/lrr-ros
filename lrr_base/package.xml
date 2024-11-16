@@ -20,8 +20,8 @@
     <build_depend>tf2</build_depend>
     <build_depend>tf2_ros</build_depend>
     <build_depend>tf2_geometry_msgs</build_depend>
-    <build_depend>laser_geometry</build_depend>
     <build_depend>protobuf</build_depend>
+    <build_depend>laser_filters</build_depend>
 
     <exec_depend>roscpp</exec_depend>
     <exec_depend>std_msgs</exec_depend>
@@ -34,8 +34,8 @@
     <exec_depend>tf2</exec_depend>
     <exec_depend>tf2_ros</exec_depend>
     <exec_depend>tf2_geometry_msgs</exec_depend>
-    <exec_depend>laser_geometry</exec_depend>
     <exec_depend>protobuf</exec_depend>
+    <build_depend>laser_filters</build_depend>
 
     <export></export>
 </package>
