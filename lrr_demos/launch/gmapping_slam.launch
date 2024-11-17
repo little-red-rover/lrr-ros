@@ -1,0 +1,20 @@
+<launch>
+    <arg name="gyro_bias_x" default="0.0"/>
+    <arg name="gyro_bias_y" default="0.0"/>
+    <arg name="gyro_bias_z" default="0.0"/>
+
+    <!-- LRR basics, eg hardware control, odometry, teleop -->
+    <include file="$(find lrr_base)/launch/base.launch" >
+        <arg name="gyro_bias_x" value="$(arg gyro_bias_x)"/>
+        <arg name="gyro_bias_y" value="$(arg gyro_bias_y)"/>
+        <arg name="gyro_bias_z" value="$(arg gyro_bias_z)"/>
+    </include>
+
+    <!-- Foxglove visualization -->
+    <include file="$(find lrr_viz)/launch/viz.launch" />
+
+    <!-- Start Gmapping -->
+    <node pkg="gmapping" type="slam_gmapping" name="lrr_slam_gmapping" output="screen">
+        <rosparam command="load" file="$(find lrr_navigation)/config/gmapping_params.yaml" />
+    </node>
+</launch>
