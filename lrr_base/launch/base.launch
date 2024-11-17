@@ -1,7 +1,14 @@
 <launch>
+    <arg name="gyro_bias_x" default="0.0"/>
+    <arg name="gyro_bias_y" default="0.0"/>
+    <arg name="gyro_bias_z" default="0.0"/>
+
     <!-- LRR Driver -->
     <node pkg="lrr_base" type="lrr_base" name="lrr_base_node" output="screen">
         <rosparam command="load" file="$(find lrr_base)/config/laser_filter.yaml" />
+        <param name="gyro_bias_x" value="$(arg gyro_bias_x)"/>
+        <param name="gyro_bias_y" value="$(arg gyro_bias_y)"/>
+        <param name="gyro_bias_z" value="$(arg gyro_bias_z)"/>
     </node>
 
     <!-- Differential controller parameters and basic localization -->
