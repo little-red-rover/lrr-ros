@@ -27,12 +27,12 @@ LRRConnection::LRRConnection(ConnectionParser *connection_parser,
       socket_(boost::asio::ip::tcp::socket(io_context_)), connected_(false) {
   // Start main thread
   main_thread_handle_ = std::thread(&LRRConnection::main_thread_, this);
+  main_thread_handle_.detach();
 }
 
 LRRConnection::~LRRConnection() {
   socket_.shutdown(boost::asio::socket_base::shutdown_both);
   socket_.close();
-  main_thread_handle_.join();
 }
 
 void LRRConnection::main_thread_() {
@@ -48,43 +48,43 @@ void LRRConnection::main_thread_() {
   socket_.async_read_some(boost::asio::null_buffers(),
                           boost::bind(&LRRConnection::handle_read_, this,
                                       boost::asio::placeholders::error));
+
   boost::asio::io_service io_service;
   while (ros::ok()) {
     try {
       io_context_.poll();
     } catch (boost::system::system_error &e) {
-      if (e.code().value() == boost::system::errc::broken_pipe ||
-          e.code().value() == boost::asio::error::eof ||
-          e.code().value() == boost::system::errc::connection_reset) {
-
-        std::printf("Connection with rover dropped: %s\n", e.what());
-        std::printf("Reconnecting...:\n");
-
-        connected_ = false;
-
-        try {
-          socket_.shutdown(boost::asio::socket_base::shutdown_both);
-          socket_.close();
-        } catch (boost::system::system_error) {
-          socket_.close();
-        }
-
-        boost::asio::ip::tcp::endpoint endpoint(
-            boost::asio::ip::address::from_string("192.168.4.1"), 8001);
-        socket_.async_connect(endpoint,
-                              boost::bind(&LRRConnection::handle_connect_, this,
-                                          boost::asio::placeholders::error));
-
-        socket_.async_read_some(boost::asio::null_buffers(),
-                                boost::bind(&LRRConnection::handle_read_, this,
-                                            boost::asio::placeholders::error));
-      } else if (e.code().value() == boost::system::errc::bad_file_descriptor) {
+      if (e.code().value() == boost::system::errc::bad_file_descriptor) {
         std::printf("Closing connection to rover.\n");
         return;
-      } else {
-        std::printf("Unhandled error code: %s\n", e.what());
-        return;
       }
+      if (e.code().value() != boost::system::errc::broken_pipe &&
+          e.code().value() != boost::asio::error::eof &&
+          e.code().value() != boost::system::errc::connection_reset) {
+
+        std::printf("Unhandled error code: %s\n", e.what());
+      }
+      std::printf("Connection with rover dropped: %s\n", e.what());
+      std::printf("Reconnecting...:\n");
+
+      connected_ = false;
+
+      try {
+        socket_.shutdown(boost::asio::socket_base::shutdown_both);
+        socket_.close();
+      } catch (boost::system::system_error) {
+        socket_.close();
+      }
+
+      boost::asio::ip::tcp::endpoint endpoint(
+          boost::asio::ip::address::from_string("192.168.4.1"), 8001);
+      socket_.async_connect(endpoint,
+                            boost::bind(&LRRConnection::handle_connect_, this,
+                                        boost::asio::placeholders::error));
+
+      socket_.async_read_some(boost::asio::null_buffers(),
+                              boost::bind(&LRRConnection::handle_read_, this,
+                                          boost::asio::placeholders::error));
     }
   }
 }
