@@ -24,15 +24,17 @@ namespace lrr_base {
 LRRConnection::LRRConnection(ConnectionParser *connection_parser,
                              OutgoingMessageID subscription)
     : connection_parser_(connection_parser), subscription_(subscription),
-      socket_(boost::asio::ip::tcp::socket(io_context_)), connected_(false) {
-  // Start main thread
-  main_thread_handle_ = std::thread(&LRRConnection::main_thread_, this);
-  main_thread_handle_.detach();
-}
+      socket_(boost::asio::ip::tcp::socket(io_context_)), connected_(false) {}
 
 LRRConnection::~LRRConnection() {
   socket_.shutdown(boost::asio::socket_base::shutdown_both);
   socket_.close();
+}
+
+void LRRConnection::connect() {
+  // Start main thread
+  main_thread_handle_ = std::thread(&LRRConnection::main_thread_, this);
+  main_thread_handle_.detach();
 }
 
 void LRRConnection::main_thread_() {

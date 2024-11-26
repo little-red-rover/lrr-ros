@@ -25,6 +25,8 @@ BatteryDriver::BatteryDriver(ros::NodeHandle node_handle)
       sensor_msgs::BatteryState::POWER_SUPPLY_TECHNOLOGY_LION;
 
   msg_.present = true;
+
+  connection_.connect();
 };
 
 void BatteryDriver::parse(OutgoingData &data) {

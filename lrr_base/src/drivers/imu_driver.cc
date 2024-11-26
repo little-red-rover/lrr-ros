@@ -33,6 +33,8 @@ ImuDriver::ImuDriver(ros::NodeHandle node_handle)
   msg_.angular_velocity_covariance[0] = 0.05;
   msg_.angular_velocity_covariance[3] = 0.05;
   msg_.angular_velocity_covariance[6] = 0.05;
+
+  connection_.connect();
 };
 
 void ImuDriver::parse(OutgoingData &data) {

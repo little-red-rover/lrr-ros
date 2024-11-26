@@ -31,6 +31,8 @@ DriveBaseDriver::DriveBaseDriver(ros::NodeHandle node_handle)
 
   registerInterface(&joint_state_interface_);
   registerInterface(&velocity_joint_interface_);
+
+  connection_.connect();
 }
 
 void DriveBaseDriver::initialize_state() {

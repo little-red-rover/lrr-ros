@@ -22,6 +22,8 @@ public:
 
   void send(IncomingCommand cmd);
 
+  void connect();
+
 private:
   void main_thread_();
   std::thread main_thread_handle_;
